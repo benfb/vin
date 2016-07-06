@@ -107,23 +107,29 @@ func (game Game) isOver() bool {
 // checkGame checks to see if the game being played
 // by `team` in `list` is over. If it is, it
 // notifies `phone`
-func checkGame(team, phone string, list []Game) {
-	for _, g := range list {
-		if g.hasTeam(team) {
-			if g.isOver() {
-				timeAvailable := time.Now().Add(90 * time.Minute)
-				textString := fmt.Sprintf("The game is over! You can watch it at %02d:%02d", timeAvailable.Hour(), timeAvailable.Minute())
-				err := sendNotification(phone, textString)
-				if err != nil {
-					log.Println("The game is over, but we couldn't notify that number!")
+func checkGame(team, phone string, sent time.Time) {
+	now := time.Now()
+	if now.Day() != sent.Day() {
+		list := fetchGames(now)
+		for _, g := range list {
+			if g.hasTeam(team) {
+				if g.isOver() {
+					timeAvailable := time.Now().Add(90 * time.Minute)
+					textString := fmt.Sprintf("The game is over! You can watch it at %02d:%02d", timeAvailable.Hour(), timeAvailable.Minute())
+					err := sendNotification(phone, textString)
+					if err != nil {
+						log.Println("The game is over, but we couldn't notify that number!")
+					}
+					log.Println("The game is over and you were successfully notified!")
+					checkGame(team, phone, now)
+				} else {
+					log.Println("The game is not over!")
 				}
-				log.Println(textString)
-				log.Println("The game is over and you were successfully notified!")
-				os.Exit(0)
-			} else {
-				log.Println("The game is not over!")
 			}
 		}
+	} else {
+		log.Println("You were already notified today. Sleeping until tomorrow...")
+		time.Sleep(12 * time.Hour)
 	}
 }
 
@@ -150,7 +156,7 @@ func main() {
 	}
 	app.Action = func(c *cli.Context) error {
 		if c.String("phone") != "" {
-			gocron.Every(c.Uint64("interval")).Seconds().Do(checkGame, c.String("team"), c.String("phone"), fetchGames(time.Now()))
+			gocron.Every(c.Uint64("interval")).Seconds().Do(checkGame, c.String("team"), c.String("phone"), time.Time{})
 			<-gocron.Start()
 		} else {
 			return cli.NewExitError("Error! You must supply a phone number", 1)
