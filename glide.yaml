@@ -1,5 +1,6 @@
-package: github.com/benfb/go-ball
+package: github.com/benfb/vin
 import:
 - package: github.com/jasonlvhit/gocron
-- package: gopkg.in/urfave/cli.v1
+- package: github.com/urfave/cli
   version: ~1.18.0
+- package: github.com/olekukonko/tablewriter

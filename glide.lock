@@ -1,8 +1,12 @@
-hash: d9726e569358d666d8815c052e43785750b883e59a3f01357548a51e5a76312f
-updated: 2016-07-06T16:35:18.353459583-05:00
+hash: 2bff470fe8af9f4a435a91aa4cb53742c481eb7ebbe48478b91c216cbc9f2dec
+updated: 2016-07-07T19:09:09.442743938-05:00
 imports:
 - name: github.com/jasonlvhit/gocron
   version: 42a5804d37aa0b9239b265e894a16b8edbf52d54
+- name: github.com/olekukonko/tablewriter
+  version: daf2955e742cf123959884fdff4685aa79b63135
+- name: github.com/urfave/cli
+  version: 1efa31f08b9333f1bd4882d61f9d668a70cd902e
 - name: gopkg.in/urfave/cli.v1
   version: 1efa31f08b9333f1bd4882d61f9d668a70cd902e
 testImports: []
