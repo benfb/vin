@@ -60,8 +60,19 @@ func main() {
 			Name:    "results",
 			Aliases: []string{"r"},
 			Usage:   "get results for all the games from a particular day, formatted as m/d/yy",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "team, t",
+					Value: "all",
+					Usage: "name of team to watch",
+				},
+			},
 			Action: func(c *cli.Context) error {
-				commands.ResultsCmd(c.Args().Get(0))
+				var day string
+				if c.Args().Get(0) != "" {
+					day = c.Args().Get(0)
+				}
+				commands.ResultsCmd(day, c.String("team"))
 				return nil
 			},
 		},

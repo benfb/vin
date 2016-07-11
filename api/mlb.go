@@ -6,38 +6,28 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/benfb/vin/util"
+	"github.com/olekukonko/tablewriter"
 )
 
-// Games represents a root
-type Games struct {
-	Date     string `xml:"date"`
-	GameList []Game `xml:"game"`
-}
-
-// Game is an individual game
-type Game struct {
-	ID           string `xml:"id,attr"`
-	Time         string `xml:"time,attr"`
-	Status       string `xml:"status,attr"`
-	AwayTeam     string `xml:"away_team_name,attr"`
-	HomeTeam     string `xml:"home_team_name,attr"`
-	AwayTeamRuns int    `xml:"away_team_runs,attr"`
-	HomeTeamRuns int    `xml:"home_team_runs,attr"`
-	AwayTeamHits int    `xml:"away_team_hits,attr"`
-	HomeTeamHits int    `xml:"home_team_hits,attr"`
-	AwayTeamErrs int    `xml:"away_team_errors,attr"`
-	HomeTeamErrs int    `xml:"home_team_errors,attr"`
+// FormatURL takes a time and returns the appropriate API URL to call
+func FormatURL(t time.Time) string {
+	year := t.Year()
+	month := util.PadDate(int(t.Month()))
+	day := util.PadDate(int(t.Day()))
+	return fmt.Sprint("http://gd2.mlb.com/components/game/mlb/year_", year, "/month_", month, "/day_", day, "/miniscoreboard.xml")
 }
 
 // FetchGames gets the latest game data from the MLB API
 // and returns a list of games on the day specified by `t`
 func FetchGames(t time.Time) []Game {
-	url := fmt.Sprint("http://gd2.mlb.com/components/game/mlb/year_", t.Year(), "/month_", util.PadDate(int(t.Month())), "/day_", util.PadDate(int(t.Day())), "/miniscoreboard.xml")
-	fmt.Println("Getting game data...")
+	url := FormatURL(t)
+	// fmt.Println("Getting game data...")
 
 	gamesStruct := &Games{}
 	GetXML(url, gamesStruct)
@@ -84,4 +74,24 @@ func (game Game) HasTeam(abbrv string) bool {
 	}
 	abbrv = strings.ToLower(abbrv[:3])
 	return strings.Contains(game.ID, abbrv)
+}
+
+// FindTeam determines if the team `team` is playing in `game`
+func (game Game) FindTeam(team string) bool {
+	if game.AwayTeam == team || game.HomeTeam == team {
+		return true
+	}
+	return false
+}
+
+// PrintBoxScoreTable prints a box score to Stdout
+func (game Game) PrintBoxScoreTable() {
+	data := [][]string{
+		[]string{game.AwayTeam, strconv.Itoa(game.AwayTeamRuns), strconv.Itoa(game.AwayTeamHits), strconv.Itoa(game.AwayTeamErrs)},
+		[]string{game.HomeTeam, strconv.Itoa(game.HomeTeamRuns), strconv.Itoa(game.HomeTeamHits), strconv.Itoa(game.HomeTeamErrs)},
+	}
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Team", "Runs", "Hits", "Errs"})
+	table.AppendBulk(data)
+	table.Render()
 }

@@ -1,31 +1,28 @@
 package commands
 
 import (
+	"fmt"
 	"log"
-	"os"
-	"strconv"
 	"time"
 
 	"github.com/benfb/vin/api"
-	"github.com/olekukonko/tablewriter"
+	"github.com/benfb/vin/util"
 )
 
 // ResultsCmd does things
-func ResultsCmd(date string) {
+func ResultsCmd(date, team string) {
+	if date == "" {
+		date = time.Now().Format("1/_2/06")
+	}
 	parsedTime, timeErr := time.Parse("1/_2/06", date)
 	if timeErr != nil {
 		log.Fatalln("That is not a valid date!")
 	}
 	list := api.FetchGames(parsedTime)
 	for _, g := range list {
-		data := [][]string{
-			[]string{g.AwayTeam, strconv.Itoa(g.AwayTeamRuns), strconv.Itoa(g.AwayTeamHits), strconv.Itoa(g.AwayTeamErrs)},
-			[]string{g.HomeTeam, strconv.Itoa(g.HomeTeamRuns), strconv.Itoa(g.HomeTeamHits), strconv.Itoa(g.HomeTeamErrs)},
+		if g.FindTeam(team) || team == "all" {
+			g.PrintBoxScoreTable()
+			fmt.Println("Inning: " + util.FormatInning(g.Inning, g.IsTop, g.Status))
 		}
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Team", "Runs", "Hits", "Errs"})
-		table.AppendBulk(data)
-		table.Render()
 	}
-
 }

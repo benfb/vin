@@ -11,6 +11,17 @@ func PadDate(toPad int) string {
 	return fmt.Sprintf("%02d", toPad)
 }
 
+// FormatInning takes an inning and a half and returns a pretty-formatted string
+func FormatInning(inning int, isTop bool, status string) string {
+	if status == "Final" {
+		return fmt.Sprintf("Final %s", "\u2713")
+	}
+	if isTop {
+		return fmt.Sprintf("%d %s", inning, "\u23F6")
+	}
+	return fmt.Sprintf("%d %s", inning, "\u25BE")
+}
+
 // SendNotification sends `message` to `phonenumber`
 func SendNotification(phoneNumber, message string) error {
 	body := strings.NewReader("number=" + phoneNumber + "&message=" + message)
