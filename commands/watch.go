@@ -21,7 +21,8 @@ func checkGame(team, phone string, sent time.Time) {
 			if g.HasTeam(team) {
 				if g.IsOver() {
 					timeAvailable := time.Now().Add(90 * time.Minute)
-					textString := fmt.Sprintf("The game is over! You can watch it at %02d:%02d", timeAvailable.Hour(), timeAvailable.Minute())
+					localTimeAvailable := util.LocateTime(timeAvailable, "America/Chicago") // TODO: Don't hardcode this timezone
+					textString := fmt.Sprintf("The game is over! You can watch it at %02d:%02d", localTimeAvailable.Hour(), localTimeAvailable.Minute())
 					err := util.SendNotification(phone, textString)
 					if err != nil {
 						log.Println("The game is over, but we couldn't notify that number!")

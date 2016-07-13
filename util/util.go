@@ -2,9 +2,20 @@ package util
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
+	"time"
 )
+
+// LocateTime locates a time in a place
+func LocateTime(t time.Time, l string) time.Time {
+	loc, err := time.LoadLocation(l)
+	if err != nil {
+		log.Panicln(err)
+	}
+	return t.In(loc)
+}
 
 // PadDate formats an integer as a two-digit string
 func PadDate(toPad int) string {
