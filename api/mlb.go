@@ -87,8 +87,18 @@ func (game Game) FindTeam(team string) bool {
 // PrintBoxScoreTable prints a box score to Stdout
 func (game Game) PrintBoxScoreTable() {
 	data := [][]string{
-		[]string{game.AwayTeam, strconv.Itoa(game.AwayTeamRuns), strconv.Itoa(game.AwayTeamHits), strconv.Itoa(game.AwayTeamErrs)},
-		[]string{game.HomeTeam, strconv.Itoa(game.HomeTeamRuns), strconv.Itoa(game.HomeTeamHits), strconv.Itoa(game.HomeTeamErrs)},
+		[]string{
+			game.AwayTeam,
+			strconv.Itoa(game.AwayTeamRuns),
+			strconv.Itoa(game.AwayTeamHits),
+			strconv.Itoa(game.AwayTeamErrs),
+		},
+		[]string{
+			game.HomeTeam,
+			strconv.Itoa(game.HomeTeamRuns),
+			strconv.Itoa(game.HomeTeamHits),
+			strconv.Itoa(game.HomeTeamErrs),
+		},
 	}
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Team", "Runs", "Hits", "Errs"})

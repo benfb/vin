@@ -12,7 +12,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "vin"
 	app.Usage = "the baseball command-line companion"
-	app.Version = "0.1.0"
+	app.Version = "0.2.0"
 	app.Commands = []cli.Command{
 		{
 			Name:    "watch",
@@ -47,12 +47,22 @@ func main() {
 			Name:    "standings",
 			Aliases: []string{"s"},
 			Usage:   "get the current standings",
+			Flags: []cli.Flag{
+				&cli.BoolFlag{
+					Name:  "aggregate, a",
+					Usage: "get all standings in one table",
+				},
+			},
 			Action: func(c *cli.Context) error {
-				if c.String("phone") != "" {
-					commands.WatchCmd(c.Uint64("interval"), c.String("team"), c.String("phone"))
+				var division string
+				if c.Args().Get(0) != "" {
+					division = c.Args().Get(0)
+				} else if c.Bool("aggregate") {
+					division = "agg"
 				} else {
-					return cli.NewExitError("Error! You must supply a phone number", 1)
+					division = "all"
 				}
+				commands.StandingsCmd(division)
 				return nil
 			},
 		},

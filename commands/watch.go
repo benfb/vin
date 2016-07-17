@@ -15,17 +15,17 @@ import (
 // notifies `phone`
 func checkGame(team, phone string, sent time.Time) {
 	now := time.Now()
-	if now.Day() != sent.Day() {
+	if now.Hour() >= 14 {
 		list := api.FetchGames(now)
 		for _, g := range list {
 			if g.HasTeam(team) {
 				if g.IsOver() {
-					timeAvailable := time.Now().Add(90 * time.Minute)
+					timeAvailable := now.Add(90 * time.Minute)
 					localTimeAvailable := util.LocateTime(timeAvailable, "America/Chicago") // TODO: Don't hardcode this timezone
 					textString := fmt.Sprintf("The game is over! You can watch it at %02d:%02d", localTimeAvailable.Hour(), localTimeAvailable.Minute())
 					err := util.SendNotification(phone, textString)
 					if err != nil {
-						log.Println("The game is over, but we couldn't notify that number!")
+						log.Println("The game is over, but we couldn't notify that number.")
 					}
 					log.Println("The game is over and you were successfully notified!")
 					checkGame(team, phone, now)
@@ -35,8 +35,8 @@ func checkGame(team, phone string, sent time.Time) {
 			}
 		}
 	} else {
-		log.Println("You were already notified today. Sleeping until tomorrow...")
-		time.Sleep(12 * time.Hour)
+		log.Println("The current time is not within the notification window. Waiting...")
+		time.Sleep(10 * time.Minute)
 	}
 }
 

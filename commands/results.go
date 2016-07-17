@@ -9,7 +9,7 @@ import (
 	"github.com/benfb/vin/util"
 )
 
-// ResultsCmd does things
+// ResultsCmd is the command run by `vin results`
 func ResultsCmd(date, team string) {
 	if date == "" {
 		date = time.Now().Format("1/_2/06")

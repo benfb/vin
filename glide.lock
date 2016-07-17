@@ -1,12 +1,26 @@
-hash: 2bff470fe8af9f4a435a91aa4cb53742c481eb7ebbe48478b91c216cbc9f2dec
-updated: 2016-07-07T19:09:09.442743938-05:00
+hash: e3d8db781f6468955c8ca98111a932763a508a1a5ea519683e5c1d787fb66876
+updated: 2016-07-17T12:06:15.374539909-05:00
 imports:
+- name: github.com/daviddengcn/go-colortext
+  version: 511bcaf42ccd42c38aba7427b6673277bf19e2a1
+- name: github.com/fatih/color
+  version: 87d4004f2ab62d0d255e0a38f1680aa534549fe3
 - name: github.com/jasonlvhit/gocron
   version: 42a5804d37aa0b9239b265e894a16b8edbf52d54
+- name: github.com/mattn/go-colorable
+  version: 9056b7a9f2d1f2d96498d6d146acd1f9d5ed3d59
+- name: github.com/mattn/go-isatty
+  version: 56b76bdf51f7708750eac80fa38b952bb9f32639
+- name: github.com/mattn/go-runewidth
+  version: d6bea18f789704b5f83375793155289da36a3c7f
 - name: github.com/olekukonko/tablewriter
   version: daf2955e742cf123959884fdff4685aa79b63135
 - name: github.com/urfave/cli
   version: 1efa31f08b9333f1bd4882d61f9d668a70cd902e
+- name: golang.org/x/sys
+  version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
+  subpackages:
+  - unix
 - name: gopkg.in/urfave/cli.v1
   version: 1efa31f08b9333f1bd4882d61f9d668a70cd902e
 testImports: []

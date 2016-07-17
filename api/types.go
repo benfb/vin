@@ -22,3 +22,40 @@ type Game struct {
 	AwayTeamErrs int    `xml:"away_team_errors,attr"`
 	HomeTeamErrs int    `xml:"home_team_errors,attr"`
 }
+
+// StandingsResponse is a json root response from the API
+type StandingsResponse struct {
+	Date         string    `json:"standings_date"`
+	StandingList Standings `json:"standing"`
+}
+
+// Standings is a slice of multiple Standings
+type Standings []Standing
+
+// Standing is an individual standing
+type Standing struct {
+	ID            string  `json:"team_id"`
+	Rank          int     `json:"rank"`
+	OrdinalRank   string  `json:"ordinal_rank"`
+	Won           int     `json:"won"`
+	Lost          int     `json:"lost"`
+	FirstName     string  `json:"first_name"`
+	LastName      string  `json:"last_name"`
+	League        string  `json:"conference"`
+	Division      string  `json:"division"`
+	GamesBack     float64 `json:"games_back"`
+	GamesPlayed   int     `json:"games_played"`
+	WinPercentage string  `json:"win_percentage"`
+}
+
+func (slice Standings) Len() int {
+	return len(slice)
+}
+
+func (slice Standings) Less(i, j int) bool {
+	return slice[i].WinPercentage > slice[j].WinPercentage
+}
+
+func (slice Standings) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
+}
