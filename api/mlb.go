@@ -78,10 +78,7 @@ func (game Game) HasTeam(abbrv string) bool {
 
 // FindTeam determines if the team `team` is playing in `game`
 func (game Game) FindTeam(team string) bool {
-	if game.AwayTeam == team || game.HomeTeam == team {
-		return true
-	}
-	return false
+	return game.AwayTeam == team || game.HomeTeam == team
 }
 
 // PrintBoxScoreTable prints a box score to Stdout

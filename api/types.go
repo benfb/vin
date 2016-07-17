@@ -47,15 +47,3 @@ type Standing struct {
 	GamesPlayed   int     `json:"games_played"`
 	WinPercentage string  `json:"win_percentage"`
 }
-
-func (slice Standings) Len() int {
-	return len(slice)
-}
-
-func (slice Standings) Less(i, j int) bool {
-	return slice[i].WinPercentage > slice[j].WinPercentage
-}
-
-func (slice Standings) Swap(i, j int) {
-	slice[i], slice[j] = slice[j], slice[i]
-}

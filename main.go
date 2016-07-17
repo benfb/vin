@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/benfb/vin/commands"
@@ -13,20 +14,23 @@ func main() {
 	app.Name = "vin"
 	app.Usage = "the baseball command-line companion"
 	app.Version = "0.2.0"
+	app.Authors = []cli.Author{
+		cli.Author{
+			Name:  "Ben Bailey",
+			Email: "bennettbailey@gmail.com",
+		},
+	}
 	app.Commands = []cli.Command{
 		{
-			Name:    "watch",
-			Aliases: []string{"w"},
-			Usage:   "get notified when a blacked-out game is available",
+			Name:      "watch",
+			Aliases:   []string{"w"},
+			Usage:     "get notified when a blacked-out game is available",
+			ArgsUsage: "[phone]",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "team, t",
 					Value: "texas",
 					Usage: "name of team to watch",
-				},
-				&cli.StringFlag{
-					Name:  "phone, p",
-					Usage: "phone number to notify when game is available",
 				},
 				&cli.Uint64Flag{
 					Name:  "interval, i",
@@ -35,8 +39,9 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				if c.String("phone") != "" {
-					commands.WatchCmd(c.Uint64("interval"), c.String("team"), c.String("phone"))
+				phone := c.Args().Get(0)
+				if fmt.Sprintf("%T", phone) == "string" && phone != "" {
+					commands.WatchClient(c.Uint64("interval"), c.String("team"), phone)
 				} else {
 					return cli.NewExitError("Error! You must supply a phone number", 1)
 				}
@@ -54,12 +59,10 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				var division string
-				if c.Args().Get(0) != "" {
-					division = c.Args().Get(0)
-				} else if c.Bool("aggregate") {
+				division := c.Args().Get(0)
+				if division == "" && c.Bool("aggregate") {
 					division = "agg"
-				} else {
+				} else if division == "" {
 					division = "all"
 				}
 				commands.StandingsCmd(division)
@@ -67,23 +70,33 @@ func main() {
 			},
 		},
 		{
-			Name:    "results",
-			Aliases: []string{"r"},
-			Usage:   "get results for all the games from a particular day, formatted as m/d/yy",
+			Name:      "server",
+			Aliases:   []string{"serve", "se"},
+			Usage:     "run a vin server",
+			ArgsUsage: "[address]",
+			Action: func(c *cli.Context) error {
+				commands.ServerCmd()
+				return nil
+			},
+		},
+		{
+			Name:      "results",
+			Aliases:   []string{"r"},
+			Usage:     "get results for all the games from a particular day, formatted as mm/dd/yy",
+			ArgsUsage: "[date]",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "team, t",
 					Value: "all",
-					Usage: "name of team to watch",
+					Usage: "name of team to get box score for",
 				},
 			},
 			Action: func(c *cli.Context) error {
-				var day string
-				if c.Args().Get(0) != "" {
-					day = c.Args().Get(0)
+				day := c.Args().Get(0)
+				if day == "" {
+					day = "today"
 				}
-				commands.ResultsCmd(day, c.String("team"))
-				return nil
+				return commands.ResultsCmd(day, c.String("team"))
 			},
 		},
 	}

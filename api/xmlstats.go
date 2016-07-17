@@ -67,19 +67,6 @@ func (standings Standings) RestrictDivision(division string) Standings {
 	return newStandings
 }
 
-// GroupByDivision takes a master slice of standings and returns a map of
-// leagues to divisions to smaller slices of standings
-// func (standings Standings) GroupByDivision() map[string]map[string]Standings {
-// 	groupedStandings := map[string]map[string]Standings{
-// 		"AL": map[string]Standings{"E": Standings{}, "C": Standings{}, "W": Standings{}},
-// 		"NL": map[string]Standings{"E": Standings{}, "C": Standings{}, "W": Standings{}},
-// 	}
-// 	for _, standing := range standings {
-// 		groupedStandings[standing.League][standing.Division] = append(groupedStandings[standing.League][standing.Division], standing)
-// 	}
-// 	return groupedStandings
-// }
-
 // PrintStandingsTable prints a standings table for a particular league and
 // division to Stdout
 func (standings Standings) PrintStandingsTable(league, division string) {
@@ -104,4 +91,19 @@ func (standings Standings) PrintMasterStandingsTable() {
 		table.Append([]string{strconv.Itoa(i + 1), s.FirstName + " " + s.LastName, s.WinPercentage, strconv.Itoa(s.Won), strconv.Itoa(s.Lost)})
 	}
 	table.Render()
+}
+
+// Len is implemented to make standings sortable
+func (standings Standings) Len() int {
+	return len(standings)
+}
+
+// Less is implemented to make standings sortable
+func (standings Standings) Less(i, j int) bool {
+	return standings[i].WinPercentage > standings[j].WinPercentage
+}
+
+// Swap is implemented to make standings sortable
+func (standings Standings) Swap(i, j int) {
+	standings[i], standings[j] = standings[j], standings[i]
 }

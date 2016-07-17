@@ -8,6 +8,26 @@ import (
 	"time"
 )
 
+// ContainsString checks is slice s contains string e
+func ContainsString(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+// Spinner prints out a cool spinner to prove that we're doing something
+func Spinner() {
+	for {
+		for _, r := range `-\|/` {
+			fmt.Printf("\r%c", r)
+			time.Sleep(50 * time.Millisecond)
+		}
+	}
+}
+
 // LocateTime locates a time in a place
 func LocateTime(t time.Time, l string) time.Time {
 	loc, err := time.LoadLocation(l)
