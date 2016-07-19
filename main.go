@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/benfb/vin/commands"
@@ -25,13 +24,8 @@ func main() {
 			Name:      "watch",
 			Aliases:   []string{"w"},
 			Usage:     "get notified when a blacked-out game is available",
-			ArgsUsage: "[phone]",
+			ArgsUsage: "[team] [phone]",
 			Flags: []cli.Flag{
-				&cli.StringFlag{
-					Name:  "team, t",
-					Value: "texas",
-					Usage: "name of team to watch",
-				},
 				&cli.Uint64Flag{
 					Name:  "interval, i",
 					Value: 20,
@@ -39,11 +33,12 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				phone := c.Args().Get(0)
-				if fmt.Sprintf("%T", phone) == "string" && phone != "" {
-					commands.WatchClient(c.Uint64("interval"), c.String("team"), phone)
+				team := c.Args().Get(0)
+				phone := c.Args().Get(1)
+				if team != "" && phone != "" {
+					commands.WatchClient(c.Uint64("interval"), team, phone)
 				} else {
-					return cli.NewExitError("Error! You must supply a phone number", 1)
+					return cli.NewExitError("Error! You must supply a team name and a phone number", 1)
 				}
 				return nil
 			},
@@ -83,7 +78,8 @@ func main() {
 			Name:      "results",
 			Aliases:   []string{"r"},
 			Usage:     "get results for all the games from a particular day, formatted as mm/dd/yy",
-			ArgsUsage: "[date]",
+			ArgsUsage: "date",
+			UsageText: "vin results [-t team] date",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "team, t",
