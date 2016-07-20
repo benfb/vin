@@ -24,7 +24,7 @@ func handleConn(c net.Conn) {
 
 // ServerCmd does things
 func ServerCmd() {
-	listener, err := net.Listen("tcp", "localhost:8000")
+	listener, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		log.Fatal(err)
 	}
