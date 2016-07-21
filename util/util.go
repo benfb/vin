@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -20,6 +21,7 @@ func ContainsString(s []string, e string) bool {
 
 // Spinner prints out a cool spinner to prove that we're doing something
 func Spinner() {
+	defer fmt.Println()
 	for {
 		for _, r := range `-\|/` {
 			fmt.Printf("\r%c", r)
@@ -29,12 +31,12 @@ func Spinner() {
 }
 
 // LocateTime locates a time in a place
-func LocateTime(t time.Time, l string) time.Time {
+func LocateTime(t time.Time, l string) (time.Time, error) {
 	loc, err := time.LoadLocation(l)
 	if err != nil {
-		log.Panicln(err)
+		return time.Time{}, err
 	}
-	return t.In(loc)
+	return t.In(loc), nil
 }
 
 // PadDate formats an integer as a two-digit string
@@ -53,21 +55,26 @@ func FormatInning(inning int, isTop bool, status string) string {
 	return fmt.Sprintf("%d %s", inning, "\u25BE")
 }
 
-// SendNotification sends `message` to `phonenumber`
-func SendNotification(phoneNumber, message string) error {
+// SendNotification sends `message` to `phonenumber` using the API at `apiURL`
+func SendNotification(apiURL, phoneNumber, message string) ([]byte, error) {
 	body := strings.NewReader("number=" + phoneNumber + "&message=" + message)
-	req, err := http.NewRequest("POST", "http://textbelt.com/text", body)
+	req, err := http.NewRequest("POST", apiURL, body)
 	if err != nil {
-		return err
+		return []byte{}, err
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return err
+		return []byte{}, err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	resp.Body.Close()
-	return nil
+	return respBody, nil
 }

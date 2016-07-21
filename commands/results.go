@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -15,8 +14,7 @@ import (
 func ResultsCmd(date, team string) error {
 	go util.Spinner()
 
-	log.Println(strings.Title(team))
-	if !util.ContainsString(api.Teams, strings.Title(team)) {
+	if !util.ContainsString(api.Teams, strings.Title(team)) && team != "all" {
 		return cli.NewExitError("Error! \""+team+"\" is not a valid team.", 1)
 	}
 	timeFmtStr := "1/_2/06"
@@ -31,7 +29,7 @@ func ResultsCmd(date, team string) error {
 	for _, g := range list {
 		if g.FindTeam(strings.Title(team)) || team == "all" {
 			g.PrintBoxScoreTable()
-			fmt.Println("Inning: " + util.FormatInning(g.Inning, g.IsTop, g.Status))
+			g.PrintProbablePitchers()
 		}
 	}
 

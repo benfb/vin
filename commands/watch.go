@@ -23,9 +23,12 @@ func checkGame(team, phone string, sent time.Time) {
 			if g.HasTeam(team) {
 				if g.IsOver() {
 					timeAvailable := now.Add(90 * time.Minute)
-					localTimeAvailable := util.LocateTime(timeAvailable, "America/Chicago") // TODO: Don't hardcode this timezone
+					localTimeAvailable, timeErr := util.LocateTime(timeAvailable, "America/Chicago") // TODO: Don't hardcode this timezone
+					if timeErr != nil {
+						log.Fatalln("The provided time zone could not be parsed.")
+					}
 					textString := fmt.Sprintf("The game is over! You can watch it at %02d:%02d", localTimeAvailable.Hour(), localTimeAvailable.Minute())
-					err := util.SendNotification(phone, textString)
+					_, err := util.SendNotification("http://textbelt.com/text", phone, textString)
 					if err != nil {
 						log.Println("The game is over, but we couldn't notify that number.")
 					}

@@ -72,13 +72,13 @@ func (standings Standings) RestrictDivision(division string) Standings {
 func (standings Standings) PrintStandingsTable(league, division string) {
 	standings = standings.RestrictLeague(league).RestrictDivision(division)
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost", "Back"})
+	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost", "Back", "Str"})
 	for i, s := range standings {
 		gamesBack := strconv.FormatFloat(s.GamesBack, 'G', 100, 32)
 		if gamesBack == "0" {
 			gamesBack = "-"
 		}
-		table.Append([]string{strconv.Itoa(i + 1), s.FirstName + " " + s.LastName, s.WinPercentage, strconv.Itoa(s.Won), strconv.Itoa(s.Lost), gamesBack})
+		table.Append([]string{strconv.Itoa(i + 1), s.FirstName + " " + s.LastName, s.WinPercentage, strconv.Itoa(s.Won), strconv.Itoa(s.Lost), gamesBack, s.Streak})
 	}
 	table.Render()
 }
@@ -86,9 +86,9 @@ func (standings Standings) PrintStandingsTable(league, division string) {
 // PrintMasterStandingsTable prints a game-wide standings table to Stdout
 func (standings Standings) PrintMasterStandingsTable() {
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost"})
+	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost", "Str"})
 	for i, s := range standings {
-		table.Append([]string{strconv.Itoa(i + 1), s.FirstName + " " + s.LastName, s.WinPercentage, strconv.Itoa(s.Won), strconv.Itoa(s.Lost)})
+		table.Append([]string{strconv.Itoa(i + 1), s.FirstName + " " + s.LastName, s.WinPercentage, strconv.Itoa(s.Won), strconv.Itoa(s.Lost), s.Streak})
 	}
 	table.Render()
 }
