@@ -1,8 +1,8 @@
 package: github.com/benfb/vin
+license: MIT
 import:
 - package: github.com/jasonlvhit/gocron
 - package: github.com/urfave/cli
   version: ~1.18.0
 - package: github.com/olekukonko/tablewriter
 - package: github.com/daviddengcn/go-colortext
-license: "MIT"

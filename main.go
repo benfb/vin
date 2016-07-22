@@ -5,7 +5,7 @@ import (
 
 	"github.com/benfb/vin/commands"
 
-	"gopkg.in/urfave/cli.v1"
+	"github.com/urfave/cli"
 )
 
 func main() {
