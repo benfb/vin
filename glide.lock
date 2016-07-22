@@ -1,5 +1,5 @@
 hash: e3d8db781f6468955c8ca98111a932763a508a1a5ea519683e5c1d787fb66876
-updated: 2016-07-22T12:40:20.625778505-05:00
+updated: 2016-07-22T12:47:11.760057246-05:00
 imports:
 - name: github.com/daviddengcn/go-colortext
   version: 511bcaf42ccd42c38aba7427b6673277bf19e2a1
