@@ -86,13 +86,18 @@ func main() {
 					Value: "all",
 					Usage: "name of team to get box score for",
 				},
+				&cli.StringFlag{
+					Name:  "except, e",
+					Value: "",
+					Usage: "name of team to exclude from results",
+				},
 			},
 			Action: func(c *cli.Context) error {
 				day := c.Args().Get(0)
 				if day == "" {
 					day = "today"
 				}
-				return commands.ResultsCmd(day, c.String("team"))
+				return commands.ResultsCmd(day, c.String("team"), c.String("except"))
 			},
 		},
 	}
