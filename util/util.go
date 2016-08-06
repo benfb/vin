@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/benfb/vin/api"
 )
 
 // ContainsString checks is slice s contains string e
@@ -77,4 +79,15 @@ func SendNotification(apiURL, phoneNumber, message string) ([]byte, error) {
 	}
 
 	return respBody, nil
+}
+
+// SeparateGames separates games
+func SeparateGames(games []api.Game, with, without []string) []api.Game {
+	validGames := []Game{}
+	for _, g := range games {
+		if g.FindTeam(with) && !g.FindTeam(without) {
+			validGames = append(validGames, g)
+		}
+	}
+	return validGames
 }
