@@ -7,11 +7,9 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/benfb/vin/api"
 )
 
-// ContainsString checks is slice s contains string e
+// ContainsString checks if slice s contains string e
 func ContainsString(s []string, e string) bool {
 	for _, a := range s {
 		if a == e {
@@ -57,7 +55,7 @@ func FormatInning(inning int, isTop bool, status string) string {
 	return fmt.Sprintf("%d %s", inning, "\u25BE")
 }
 
-// SendNotification sends `message` to `phonenumber` using the API at `apiURL`
+// SendNotification sends a message to the phonenumber using the API at apiURL
 func SendNotification(apiURL, phoneNumber, message string) ([]byte, error) {
 	body := strings.NewReader("number=" + phoneNumber + "&message=" + message)
 	req, err := http.NewRequest("POST", apiURL, body)
@@ -82,12 +80,12 @@ func SendNotification(apiURL, phoneNumber, message string) ([]byte, error) {
 }
 
 // SeparateGames separates games
-func SeparateGames(games []api.Game, with, without []string) []api.Game {
-	validGames := []Game{}
-	for _, g := range games {
-		if g.FindTeam(with) && !g.FindTeam(without) {
-			validGames = append(validGames, g)
-		}
-	}
-	return validGames
-}
+// func SeparateGames(games []api.Game, with, without []string) []api.Game {
+// 	validGames := []Game{}
+// 	for _, g := range games {
+// 		if g.FindTeam(with) && !g.FindTeam(without) {
+// 			validGames = append(validGames, g)
+// 		}
+// 	}
+// 	return validGames
+// }
