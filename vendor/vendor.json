@@ -1,0 +1,37 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "awH0udAyzV8zYKBShHEfpHyM9fI=",
+			"path": "github.com/daviddengcn/go-colortext",
+			"revision": "511bcaf42ccd42c38aba7427b6673277bf19e2a1",
+			"revisionTime": "2016-05-07T01:00:35Z"
+		},
+		{
+			"checksumSHA1": "Epx/Fewr0QrXZRdg26+97oIoV2k=",
+			"path": "github.com/jasonlvhit/gocron",
+			"revision": "42a5804d37aa0b9239b265e894a16b8edbf52d54",
+			"revisionTime": "2016-06-29T18:10:17Z"
+		},
+		{
+			"checksumSHA1": "DdH3xAkzAWJ4B/LGYJyCeRsly2I=",
+			"path": "github.com/mattn/go-runewidth",
+			"revision": "d6bea18f789704b5f83375793155289da36a3c7f",
+			"revisionTime": "2016-03-15T04:07:12Z"
+		},
+		{
+			"checksumSHA1": "HB6MvfJv0flQn+viiwDzUGKj5gw=",
+			"path": "github.com/olekukonko/tablewriter",
+			"revision": "daf2955e742cf123959884fdff4685aa79b63135",
+			"revisionTime": "2016-06-21T09:30:29Z"
+		},
+		{
+			"checksumSHA1": "0Il1DbcyN359or+I4zLd6lwFirk=",
+			"path": "github.com/urfave/cli",
+			"revision": "11c134509d89c2018675f369955218a180dc7428",
+			"revisionTime": "2016-07-16T16:11:36Z"
+		}
+	],
+	"rootPath": "github.com/benfb/vin"
+}
