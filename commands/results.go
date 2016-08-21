@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"log"
 	"strings"
 	"time"
 
@@ -28,12 +27,6 @@ func ResultsCmd(date, team, without string) error {
 	list := api.FetchGames(parsedTime)
 	for _, g := range list {
 		if !g.FindTeam(strings.Title(without)) && (g.FindTeam(strings.Title(team)) || team == "all") {
-			w := without
-			a := g.FindTeam(strings.Title(without))
-			b := !g.FindTeam(strings.Title(without)) && (g.FindTeam(strings.Title(team)) || team == "all")
-			log.Println("w: " + w)
-			log.Printf("a: %t\n", a)
-			log.Printf("b: %t\n", b)
 			g.PrintBoxScoreTable()
 			g.PrintProbablePitchers()
 		}
