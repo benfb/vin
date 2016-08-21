@@ -9,4 +9,5 @@ Installing
 
 ```
 go get -u github.com/benfb/vin
+go install github.com/benfb/vin
 ```
