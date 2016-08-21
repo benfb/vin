@@ -60,8 +60,8 @@ func GetMLB(url string, target *MLBRoot) error {
 }
 
 // IsOver determines whether or not a game is over
-func (game Game) IsOver() bool {
-	if game.Status == "Final" {
+func (g Game) IsOver() bool {
+	if g.Status == "Final" {
 		return true
 	}
 
@@ -69,56 +69,56 @@ func (game Game) IsOver() bool {
 }
 
 // HasTeam determines if the team `abbrv` is playing in `game`
-func (game Game) HasTeam(abbrv string) bool {
+func (g Game) HasTeam(abbrv string) bool {
 	if len(abbrv) < 3 {
 		log.Println("Team abbreviation too short!")
 		return false
 	}
 	abbrv = strings.ToLower(abbrv[:3])
-	return strings.Contains(game.ID, abbrv)
+	return strings.Contains(g.ID, abbrv)
 }
 
 // FindTeam determines if the team `team` is playing in `game`
-func (game Game) FindTeam(team string) bool {
-	return game.AwayTeam == team || game.HomeTeam == team
+func (g Game) FindTeam(team string) bool {
+	return g.AwayTeam == team || g.HomeTeam == team
 }
 
 // PrintBoxScoreTable prints a box score to Stdout
-func (game Game) PrintBoxScoreTable() {
+func (g Game) PrintBoxScoreTable() {
 	ct.Foreground(ct.Cyan, true)
-	fmt.Printf("%s (%d - %d) @ %s (%d - %d)\n", game.AwayTeam, game.AwayTeamWins, game.AwayTeamLosses, game.HomeTeam, game.HomeTeamWins, game.HomeTeamLosses)
+	fmt.Printf("%s (%d - %d) @ %s (%d - %d)\n", g.AwayTeam, g.AwayTeamWins, g.AwayTeamLosses, g.HomeTeam, g.HomeTeamWins, g.HomeTeamLosses)
 	ct.ResetColor()
-	if game.Status != "Preview" {
+	if g.Status != "Preview" {
 		data := [][]string{
 			[]string{
-				game.AwayTeam,
-				strconv.Itoa(game.AwayTeamRuns),
-				strconv.Itoa(game.AwayTeamHits),
-				strconv.Itoa(game.AwayTeamErrs),
+				g.AwayTeam,
+				strconv.Itoa(g.AwayTeamRuns),
+				strconv.Itoa(g.AwayTeamHits),
+				strconv.Itoa(g.AwayTeamErrs),
 			},
 			[]string{
-				game.HomeTeam,
-				strconv.Itoa(game.HomeTeamRuns),
-				strconv.Itoa(game.HomeTeamHits),
-				strconv.Itoa(game.HomeTeamErrs),
+				g.HomeTeam,
+				strconv.Itoa(g.HomeTeamRuns),
+				strconv.Itoa(g.HomeTeamHits),
+				strconv.Itoa(g.HomeTeamErrs),
 			},
 		}
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"Team", "Runs", "Hits", "Errs"})
 		table.AppendBulk(data)
 		table.Render()
-		fmt.Println("Inning: " + util.FormatInning(game.Inning, game.IsTop, game.Status))
+		fmt.Println("Inning: " + util.FormatInning(g.Inning, g.IsTop, g.Status))
 		fmt.Println()
 	}
 }
 
 // PrintProbablePitchers prints the probable pitchers (if any exist)
-func (game Game) PrintProbablePitchers() {
+func (g Game) PrintProbablePitchers() {
 	emptyPitcher := ProbablePitcher{}
-	if game.AwayProbablePitcher != emptyPitcher {
+	if g.AwayProbablePitcher != emptyPitcher {
 		fmt.Println("Probable pitchers:")
-		away := game.AwayProbablePitcher
-		home := game.HomeProbablePitcher
+		away := g.AwayProbablePitcher
+		home := g.HomeProbablePitcher
 		data := [][]string{
 			[]string{
 				away.FirstName + " " + away.LastName,

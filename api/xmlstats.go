@@ -46,9 +46,9 @@ func GetStandingsJSON(url string, target *StandingsResponse) error {
 }
 
 // RestrictLeague restricts standings to a particular league
-func (standings Standings) RestrictLeague(league string) Standings {
+func (std Standings) RestrictLeague(league string) Standings {
 	newStandings := []Standing{}
-	for _, s := range standings {
+	for _, s := range std {
 		if s.League == strings.ToUpper(league) {
 			newStandings = append(newStandings, s)
 		}
@@ -57,9 +57,9 @@ func (standings Standings) RestrictLeague(league string) Standings {
 }
 
 // RestrictDivision restricts standings to a particular division
-func (standings Standings) RestrictDivision(division string) Standings {
+func (std Standings) RestrictDivision(division string) Standings {
 	newStandings := []Standing{}
-	for _, s := range standings {
+	for _, s := range std {
 		if s.Division == strings.ToUpper(division) {
 			newStandings = append(newStandings, s)
 		}
@@ -69,11 +69,11 @@ func (standings Standings) RestrictDivision(division string) Standings {
 
 // PrintStandingsTable prints a standings table for a particular league and
 // division to Stdout
-func (standings Standings) PrintStandingsTable(league, division string) {
-	standings = standings.RestrictLeague(league).RestrictDivision(division)
+func (std Standings) PrintStandingsTable(league, division string) {
+	std = std.RestrictLeague(league).RestrictDivision(division)
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost", "Back", "Str"})
-	for i, s := range standings {
+	for i, s := range std {
 		gamesBack := strconv.FormatFloat(s.GamesBack, 'G', 100, 32)
 		if gamesBack == "0" {
 			gamesBack = "-"
@@ -84,26 +84,23 @@ func (standings Standings) PrintStandingsTable(league, division string) {
 }
 
 // PrintMasterStandingsTable prints a game-wide standings table to Stdout
-func (standings Standings) PrintMasterStandingsTable() {
+func (std Standings) PrintMasterStandingsTable() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost", "Str"})
-	for i, s := range standings {
+	for i, s := range std {
 		table.Append([]string{strconv.Itoa(i + 1), s.FirstName + " " + s.LastName, s.WinPercentage, strconv.Itoa(s.Won), strconv.Itoa(s.Lost), s.Streak})
 	}
 	table.Render()
 }
 
-// Len is implemented to make standings sortable
-func (standings Standings) Len() int {
-	return len(standings)
+func (std Standings) Len() int {
+	return len(std)
 }
 
-// Less is implemented to make standings sortable
-func (standings Standings) Less(i, j int) bool {
-	return standings[i].WinPercentage > standings[j].WinPercentage
+func (std Standings) Less(i, j int) bool {
+	return std[i].WinPercentage > std[j].WinPercentage
 }
 
-// Swap is implemented to make standings sortable
-func (standings Standings) Swap(i, j int) {
-	standings[i], standings[j] = standings[j], standings[i]
+func (std Standings) Swap(i, j int) {
+	std[i], std[j] = std[j], std[i]
 }
