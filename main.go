@@ -66,8 +66,8 @@ func main() {
 		},
 		{
 			Name:      "server",
-			Aliases:   []string{"serve", "se"},
-			Usage:     "run a vin server",
+			Aliases:   []string{"serve"},
+			Usage:     "Run a vin server",
 			ArgsUsage: "[address]",
 			Action: func(c *cli.Context) error {
 				commands.ServerCmd()
@@ -77,7 +77,7 @@ func main() {
 		{
 			Name:      "results",
 			Aliases:   []string{"r"},
-			Usage:     "get results for all the games from a particular day, formatted as mm/dd/yy",
+			Usage:     "Get results for all the games from a particular day, formatted as mm/dd/yy",
 			ArgsUsage: "date",
 			UsageText: "vin results [-t team] date",
 			Flags: []cli.Flag{
