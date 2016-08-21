@@ -4,8 +4,13 @@
 
 play ball!
 
+Namesake
+--------
+`vin` is named after [Vin Scully](https://en.wikipedia.org/wiki/Vin_Scully).
+
 Installing
 ----------
+It's pretty easy once you have [Go installed](https://golang.org/dl/):
 
 ```
 go get -u github.com/benfb/vin
