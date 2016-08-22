@@ -24,7 +24,7 @@ func main() {
 			Name:      "watch",
 			Aliases:   []string{"w"},
 			Usage:     "get notified when a blacked-out game is available",
-			ArgsUsage: "[team] [phone]",
+			ArgsUsage: "team phone server",
 			Flags: []cli.Flag{
 				&cli.Uint64Flag{
 					Name:  "interval, i",
@@ -35,18 +35,20 @@ func main() {
 			Action: func(c *cli.Context) error {
 				team := c.Args().Get(0)
 				phone := c.Args().Get(1)
-				if team != "" && phone != "" {
-					commands.WatchClient(c.Uint64("interval"), team, phone)
+				server := c.Args().Get(2)
+				if team != "" && phone != "" && server != "" {
+					commands.WatchClient(c.Uint64("interval"), team, phone, server)
 				} else {
-					return cli.NewExitError("Error! You must supply a team name and a phone number", 1)
+					return cli.NewExitError("Error! You must supply a team name, phone number, and server", 1)
 				}
 				return nil
 			},
 		},
 		{
-			Name:    "standings",
-			Aliases: []string{"s"},
-			Usage:   "get the current standings",
+			Name:      "standings",
+			Aliases:   []string{"s"},
+			Usage:     "get the current standings",
+			ArgsUsage: "[division]",
 			Flags: []cli.Flag{
 				&cli.BoolFlag{
 					Name:  "aggregate, a",
@@ -78,8 +80,7 @@ func main() {
 			Name:      "results",
 			Aliases:   []string{"r"},
 			Usage:     "Get results for all the games from a particular day, formatted as mm/dd/yy",
-			ArgsUsage: "date",
-			UsageText: "vin results [-t team] date",
+			ArgsUsage: "[date]",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "team, t",

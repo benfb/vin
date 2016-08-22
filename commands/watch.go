@@ -55,8 +55,8 @@ func WatchCmd(interval uint64, team, phone string) {
 }
 
 // WatchClient does things
-func WatchClient(interval uint64, team, phone string) {
-	conn, err := net.Dial("tcp", "104.131.132.239:8000")
+func WatchClient(interval uint64, team, phone, srv string) {
+	conn, err := net.Dial("tcp", srv)
 	if err != nil {
 		log.Fatal(err)
 	}
