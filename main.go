@@ -23,7 +23,7 @@ func main() {
 		{
 			Name:      "watch",
 			Aliases:   []string{"w"},
-			Usage:     "get notified when a blacked-out game is available",
+			Usage:     "Notifies you when a blacked-out game is available",
 			ArgsUsage: "team phone server",
 			Flags: []cli.Flag{
 				&cli.Uint64Flag{
@@ -47,7 +47,7 @@ func main() {
 		{
 			Name:      "standings",
 			Aliases:   []string{"s"},
-			Usage:     "get the current standings",
+			Usage:     "Gets the current standings",
 			ArgsUsage: "[division]",
 			Flags: []cli.Flag{
 				&cli.BoolFlag{
@@ -69,7 +69,7 @@ func main() {
 		{
 			Name:      "server",
 			Aliases:   []string{"serve"},
-			Usage:     "Run a vin server",
+			Usage:     "Runs a vin server",
 			ArgsUsage: "[address]",
 			Action: func(c *cli.Context) error {
 				commands.ServerCmd()
@@ -79,7 +79,7 @@ func main() {
 		{
 			Name:      "results",
 			Aliases:   []string{"r"},
-			Usage:     "Get results for all the games from a particular day, formatted as mm/dd/yy",
+			Usage:     "Gets results for all the games from a particular day, formatted as mm/dd/yy",
 			ArgsUsage: "[date]",
 			Flags: []cli.Flag{
 				&cli.StringFlag{

@@ -19,6 +19,7 @@ Vin has the ability to notify you via text message when a blacked-out game becom
 
 Examples
 --------
+### Results
 ```
 $ vin results
 
@@ -50,6 +51,39 @@ Probable pitchers:
 +-------------+-----+------+
 ```
 
+### Standings
+```
+$ vin standings nlc
+
+National League Central
++---+---------------------+------+-----+------+------+-----+
+| # |        TEAM         | PCT  | WON | LOST | BACK | STR |
++---+---------------------+------+-----+------+------+-----+
+| 1 | Chicago Cubs        | .634 |  78 |   45 |    - | L1  |
+| 2 | St. Louis Cardinals | .537 |  66 |   57 |   12 | W1  |
+| 3 | Pittsburgh Pirates  | .512 |  62 |   59 |   15 | L3  |
+| 4 | Milwaukee Brewers   | .431 |  53 |   70 |   25 | W1  |
+| 5 | Cincinnati Reds     | .427 |  53 |   71 | 25.5 | L2  |
++---+---------------------+------+-----+------+------+-----+
+
+$ vin standings -a
+
++----+-----------------------+------+-----+------+-----+
+| #  |         TEAM          | PCT  | WON | LOST | STR |
++----+-----------------------+------+-----+------+-----+
+|  1 | Chicago Cubs          | .634 |  78 |   45 | L1  |
+|  2 | Washington Nationals  | .593 |  73 |   50 | L1  |
+|  3 | Texas Rangers         | .584 |  73 |   52 | L2  |
+|  4 | Cleveland Indians     | .582 |  71 |   51 | W1  |
+|  5 | Toronto Blue Jays     | .565 |  70 |   54 | L1  |
+...
+| 28 | Arizona Diamondbacks  | .411 |  51 |   73 | L1  |
+| 29 | Minnesota Twins       | .395 |  49 |   75 | L4  |
+| 30 | Atlanta Braves        | .363 |  45 |   79 | W1  |
++----+-----------------------+------+-----+------+-----+
+```
+
+###
 Namesake
 --------
 `vin` is named after [Vin Scully](https://en.wikipedia.org/wiki/Vin_Scully).
