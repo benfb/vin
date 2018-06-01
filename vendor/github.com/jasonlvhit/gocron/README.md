@@ -7,8 +7,8 @@ goCron is a Golang job scheduling package which lets you run Go functions period
 goCron is a Golang implementation of Ruby module [clockwork](<https://github.com/tomykaira/clockwork>) and Python job scheduling package [schedule](<https://github.com/dbader/schedule>), and personally, this package is my first Golang program, just for fun and practice.
 
 See also this two great articles:
-* [Rethinking Cron](http://adam.heroku.com/past/2010/4/13/rethinking_cron/)
-* [Replace Cron with Clockwork](http://adam.heroku.com/past/2010/6/30/replace_cron_with_clockwork/)
+* [Rethinking Cron](http://adam.herokuapp.com/past/2010/4/13/rethinking_cron/)
+* [Replace Cron with Clockwork](http://adam.herokuapp.com/past/2010/6/30/replace_cron_with_clockwork/)
 
 Back to this package, you could just use this simple API as below, to run a cron scheduler.
 
@@ -72,4 +72,4 @@ and full test cases and [document](http://godoc.org/github.com/jasonlvhit/gocron
 
 Once again, thanks to the great works of Ruby clockwork and Python schedule package. BSD license is used, see the file License for detail.
 
-Hava fun!
+Have fun!
