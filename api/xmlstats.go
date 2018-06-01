@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -24,8 +25,17 @@ func FetchStandings() Standings {
 
 // GetStandingsJSON unmarshals an XML API response into a list of games
 func GetStandingsJSON(url string, target *StandingsResponse) error {
-	resp, htmlErr := http.Get(url)
+	c := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
 
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("User-Agent", "Vin/1.0 (http://github.com/benfb/vin)")
+
+	resp, htmlErr := c.Do(req)
+	fmt.Println(url)
 	if htmlErr != nil {
 		return htmlErr
 	}
