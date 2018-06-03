@@ -19,6 +19,38 @@ func TestContainsString(t *testing.T) {
 	}
 }
 
+func TestContainsStringAny(t *testing.T) {
+	if result := ContainsStringAny([]string{"hello", "world"}, "world"); result != true {
+		t.Errorf("Got %v, expected true.", result)
+	}
+
+	if result := ContainsStringAny([]string{"hello", "world"}, "hel"); result != true {
+		t.Errorf("Got %v, expected true.", result)
+	}
+
+	if result := ContainsStringAny([]string{"hello", "world"}, "there"); result != false {
+		t.Errorf("Got %v, expected false.", result)
+	}
+}
+
+func TestFindInStringSlice(t *testing.T) {
+	if result := FindInStringSlice([]string{"hello", "world"}, "world"); result != 1 {
+		t.Errorf("Got %v, expected 1.", result)
+	}
+
+	if result := FindInStringSlice([]string{"hello", "world"}, "hel"); result != 0 {
+		t.Errorf("Got %v, expected 0.", result)
+	}
+
+	if result := FindInStringSlice([]string{"hello", "world"}, ""); result != -1 {
+		t.Errorf("Got %v, expected -1.", result)
+	}
+
+	if result := FindInStringSlice([]string{"hello", "world"}, "there"); result != -1 {
+		t.Errorf("Got %v, expected -1.", result)
+	}
+}
+
 func TestLocateTime(t *testing.T) {
 	result, _ := LocateTime(time.Now(), "America/Chicago")
 	central, _ := time.LoadLocation("America/Chicago")
@@ -41,20 +73,20 @@ func TestPadDate(t *testing.T) {
 }
 
 func TestFormatInning(t *testing.T) {
-	result := FormatInning(1, true, "")
-	expected := fmt.Sprintf("%d %s", 1, "\u23F6")
+	result := FormatInning("1st", true, "")
+	expected := "1st \u25B4"
 	if result != expected {
 		t.Errorf("Got %v, expected %v.", result, expected)
 	}
 
-	resultBottom := FormatInning(1, false, "")
-	expectedBottom := fmt.Sprintf("%d %s", 1, "\u25BE")
+	resultBottom := FormatInning("1st", false, "")
+	expectedBottom := "1st \u25BE"
 	if resultBottom != expectedBottom {
 		t.Errorf("Got %v, expected %v.", resultBottom, expectedBottom)
 	}
 
-	resultFinal := FormatInning(9, false, "Final")
-	expectedFinal := fmt.Sprintf("%s %s", "Final", "\u2713")
+	resultFinal := FormatInning("9th", false, "Final")
+	expectedFinal := "Final \u2714"
 	if resultFinal != expectedFinal {
 		t.Errorf("Got %v, expected %v.", resultFinal, expectedFinal)
 	}

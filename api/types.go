@@ -1,11 +1,11 @@
 package api
 
-// MLBRoot is the root of an MLB JSON API response
+// Schedule is the root of an MLB JSON API response
 type Schedule struct {
 	Dates []ScheduleDate `json:"dates"`
 }
 
-// Date represents a data root from the MLB JSON API
+// ScheduleDate represents a data root from the MLB JSON API
 type ScheduleDate struct {
 	Date  string         `json:"date"`
 	Games []ScheduleGame `json:"games"`
@@ -14,7 +14,7 @@ type ScheduleDate struct {
 // Game is an individual game
 type ScheduleGame struct {
 	ID     int                `json:"gamePk"`
-	Time   string             `json:"time"`
+	Time   string             `json:"gameDate"`
 	Status ScheduleGameStatus `json:"status"`
 	Teams  ScheduleGameTeams  `json:"teams"`
 }
@@ -83,15 +83,6 @@ type LineScoreTeam struct {
 	Runs   int `json:"runs"`
 	Hits   int `json:"hits"`
 	Errors int `json:"errors"`
-}
-
-// ProbablePitcher represents the likely pitcher for a game
-type ProbablePitcher struct {
-	ID        string `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Wins      int    `json:"wins,string"`
-	Losses    int    `json:"losses,string"`
 }
 
 // StandingsResponse is a json root response from the API

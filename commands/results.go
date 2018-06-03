@@ -12,8 +12,6 @@ import (
 
 // ResultsCmd is the command run by `vin results`
 func ResultsCmd(date, team, without string) error {
-	// go util.Spinner()
-
 	if !util.ContainsString(api.Teams, strings.Title(team)) && team != "all" {
 		return cli.NewExitError("Error! \""+team+"\" is not a valid team.", 1)
 	}
@@ -29,7 +27,6 @@ func ResultsCmd(date, team, without string) error {
 	for _, g := range list {
 		if !g.FindTeam(strings.Title(without)) && (g.FindTeam(strings.Title(team)) || team == "all") {
 			api.PrintBoxScoreTable(g, api.FetchLineScore(strconv.Itoa(g.ID)))
-			// g.PrintProbablePitchers()
 		}
 	}
 

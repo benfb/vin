@@ -96,6 +96,18 @@ func (g ScheduleGame) IsOver() bool {
 	return false
 }
 
+func (g ScheduleGame) ParseTime() time.Time {
+	t, e := time.Parse("2006-01-02T15:04:05Z", g.Time)
+	if e != nil {
+		fmt.Println(e)
+	}
+	lt := t.Local()
+	if e != nil {
+		fmt.Println(e)
+	}
+	return lt
+}
+
 // HasTeam determines if the team `abbrv` is playing in `game`
 func (g ScheduleGame) HasTeam(abbrv string) bool {
 	if len(abbrv) < 3 {
@@ -119,7 +131,8 @@ func (g ScheduleGame) FindTeam(team string) bool {
 // PrintBoxScoreTable prints a box score to Stdout
 func PrintBoxScoreTable(sg ScheduleGame, ls *LineScore) {
 	ct.Foreground(ct.Cyan, true)
-	fmt.Printf("%s (%d - %d) @ %s (%d - %d)\n", sg.Teams.Away.Team.Name, sg.Teams.Away.LeagueRecord.Wins, sg.Teams.Away.LeagueRecord.Losses, sg.Teams.Home.Team.Name, sg.Teams.Home.LeagueRecord.Wins, sg.Teams.Home.LeagueRecord.Losses)
+	gameTime := sg.ParseTime()
+	fmt.Printf("%s (%d - %d) @ %s (%d - %d) [%v]\n", sg.Teams.Away.Team.Name, sg.Teams.Away.LeagueRecord.Wins, sg.Teams.Away.LeagueRecord.Losses, sg.Teams.Home.Team.Name, sg.Teams.Home.LeagueRecord.Wins, sg.Teams.Home.LeagueRecord.Losses, gameTime.Format("3:04PM"))
 	ct.ResetColor()
 	if sg.Status.AbstractGameState != "Preview" {
 		data := [][]string{
@@ -144,30 +157,3 @@ func PrintBoxScoreTable(sg ScheduleGame, ls *LineScore) {
 		fmt.Println()
 	}
 }
-
-// PrintProbablePitchers prints the probable pitchers (if any exist)
-// func (g LineScore) PrintProbablePitchers() {
-// 	emptyPitcher := ProbablePitcher{}
-// 	if g.AwayProbablePitcher != emptyPitcher {
-// 		fmt.Println("Probable pitchers:")
-// 		away := g.AwayProbablePitcher
-// 		home := g.HomeProbablePitcher
-// 		data := [][]string{
-// 			[]string{
-// 				away.FirstName + " " + away.LastName,
-// 				strconv.Itoa(away.Wins),
-// 				strconv.Itoa(away.Losses),
-// 			},
-// 			[]string{
-// 				home.FirstName + " " + home.LastName,
-// 				strconv.Itoa(home.Wins),
-// 				strconv.Itoa(home.Losses),
-// 			},
-// 		}
-// 		table := tablewriter.NewWriter(os.Stdout)
-// 		table.SetHeader([]string{"Pitcher", "Won", "Lost"})
-// 		table.AppendBulk(data)
-// 		table.Render()
-// 		fmt.Println()
-// 	}
-// }
