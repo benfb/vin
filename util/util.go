@@ -19,6 +19,29 @@ func ContainsString(s []string, e string) bool {
 	return false
 }
 
+// ContainsStringAny checks if any string in slice s contains string e
+func ContainsStringAny(s []string, e string) bool {
+	for _, a := range s {
+		if strings.Contains(a, e) {
+			return true
+		}
+	}
+	return false
+}
+
+// FindInStringSlice checks if any string in slice s contains string e
+func FindInStringSlice(s []string, e string) int {
+	if len(e) < 1 {
+		return -1
+	}
+	for i, a := range s {
+		if strings.Contains(a, e) {
+			return i
+		}
+	}
+	return -1
+}
+
 // Spinner prints out a cool spinner to prove that we're doing something
 func Spinner() {
 	defer fmt.Println()
@@ -45,14 +68,14 @@ func PadDate(toPad int) string {
 }
 
 // FormatInning takes an inning and a half and returns a pretty-formatted string
-func FormatInning(inning int, isTop bool, status string) string {
+func FormatInning(inning string, isTop bool, status string) string {
 	if status == "Final" {
-		return fmt.Sprintf("Final %s", "\u2713")
+		return fmt.Sprintf("Final %s", "\u2714")
 	}
 	if isTop {
-		return fmt.Sprintf("%d %s", inning, "\u23F6")
+		return fmt.Sprintf("%s %s", inning, "\u25B4")
 	}
-	return fmt.Sprintf("%d %s", inning, "\u25BE")
+	return fmt.Sprintf("%s %s", inning, "\u25BE")
 }
 
 // SendNotification sends a message to the phonenumber using the API at apiURL
@@ -78,14 +101,3 @@ func SendNotification(apiURL, phoneNumber, message string) ([]byte, error) {
 
 	return respBody, nil
 }
-
-// SeparateGames separates games
-// func SeparateGames(games []api.Game, with, without []string) []api.Game {
-// 	validGames := []Game{}
-// 	for _, g := range games {
-// 		if g.FindTeam(with) && !g.FindTeam(without) {
-// 			validGames = append(validGames, g)
-// 		}
-// 	}
-// 	return validGames
-// }
