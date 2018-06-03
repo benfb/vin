@@ -5,3 +5,13 @@ builds:
       - linux
     goarch:
       - amd64
+
+brew:
+  name: vin
+
+  github:
+    owner: benfb
+    name: homebrew-tap
+
+  homepage: "https://github.com/benfb/vin/"
+  description: "Simple baseball CLI."
