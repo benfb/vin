@@ -1,42 +1,88 @@
 package api
 
 // MLBRoot is the root of an MLB JSON API response
-type MLBRoot struct {
-	Data MLBData `json:"data"`
+type Schedule struct {
+	Dates []ScheduleDate `json:"dates"`
 }
 
-// MLBData represents a data root from the MLB JSON API
-type MLBData struct {
-	Games Games `json:"games"`
-}
-
-// Games represents a JSON root response from the API
-type Games struct {
-	Date     string `json:"date"`
-	GameList []Game `json:"game"`
+// Date represents a data root from the MLB JSON API
+type ScheduleDate struct {
+	Date  string         `json:"date"`
+	Games []ScheduleGame `json:"games"`
 }
 
 // Game is an individual game
-type Game struct {
-	ID                  string          `json:"id"`
-	Time                string          `json:"time"`
-	Status              string          `json:"status"`
-	Inning              int             `json:"inning,string"`
-	IsTop               bool            `json:"top_inning"`
-	AwayTeam            string          `json:"away_team_name"`
-	HomeTeam            string          `json:"home_team_name"`
-	AwayTeamRuns        int             `json:"away_team_runs,string"`
-	HomeTeamRuns        int             `json:"home_team_runs,string"`
-	AwayTeamHits        int             `json:"away_team_hits,string"`
-	HomeTeamHits        int             `json:"home_team_hits,string"`
-	AwayTeamErrs        int             `json:"away_team_errors,string"`
-	HomeTeamErrs        int             `json:"home_team_errors,string"`
-	HomeTeamWins        int             `json:"home_win,string"`
-	AwayTeamWins        int             `json:"away_win,string"`
-	HomeTeamLosses      int             `json:"home_loss,string"`
-	AwayTeamLosses      int             `json:"away_loss,string"`
-	HomeProbablePitcher ProbablePitcher `json:"home_probable_pitcher"`
-	AwayProbablePitcher ProbablePitcher `json:"away_probable_pitcher"`
+type ScheduleGame struct {
+	ID     int                `json:"gamePk"`
+	Time   string             `json:"time"`
+	Status ScheduleGameStatus `json:"status"`
+	Teams  ScheduleGameTeams  `json:"teams"`
+}
+
+type ScheduleGameStatus struct {
+	AbstractGameState string `json:"abstractGameState"`
+	CodedGameState    string `json:"codedGameState"`
+	DetailedState     string `json:"detailedState"`
+	StatusCode        string `json:"statusCode"`
+	AbstractGameCode  string `json:"abstractGameCode"`
+}
+
+type ScheduleGameTeams struct {
+	Away GameTeam `json:"away"`
+	Home GameTeam `json:"home"`
+}
+
+type GameTeam struct {
+	LeagueRecord GameTeamLeagueRecord
+	Score        int          `json:"score"`
+	Team         GameTeamTeam `json:"team"`
+	IsWinner     bool         `json:"isWinner"`
+	SplitSquad   bool         `json:"splitSquad"`
+	SeriesNumber int          `json:"seriesNumber"`
+}
+
+type GameTeamTeam struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	Link string `json:"link"`
+}
+
+type GameTeamLeagueRecord struct {
+	Wins   int    `json:"wins"`
+	Losses int    `json:"losses"`
+	Pct    string `json:"pct"`
+}
+
+type LineScore struct {
+	CurrentInning        int               `json:"currentInning"`
+	CurrentInningOrdinal string            `json:"currentInningOrdinal"`
+	InningHalf           string            `json:"inningHalf"`
+	IsTopInning          bool              `json:"isTopInning"`
+	ScheduledInnings     int               `json:"scheduledInnings"`
+	Innings              []LineScoreInning `json:"innings"`
+	Teams                LineScoreTeams    `json:"teams"`
+}
+
+type LineScoreInning struct {
+	Num        int                 `json:"num"`
+	OrdinalNum string              `json:"ordinalNum"`
+	Away       LineScoreInningTeam `json:"away"`
+	Home       LineScoreInningTeam `json:"home"`
+}
+
+type LineScoreInningTeam struct {
+	Runs int `json:"runs"`
+}
+
+type LineScoreTeams struct {
+	Away LineScoreTeam `json:"away"`
+	Home LineScoreTeam `json:"home"`
+}
+
+type LineScoreTeam struct {
+	Runs   int `json:"runs"`
+	Hits   int `json:"hits"`
+	Errors int `json:"errors"`
 }
 
 // ProbablePitcher represents the likely pitcher for a game
@@ -56,6 +102,27 @@ type StandingsResponse struct {
 
 // Standings is a slice of multiple Standings
 type Standings []Standing
+
+type StandingsRecords struct {
+	TeamRecords []StandingsTeamRecords `json:"teamRecords"`
+}
+
+type StandingsTeamRecords []StandingsTeamRecord
+
+type StandingsTeamRecord struct {
+	Team      StandingsTeamRecordTeam   `json:"team"`
+	Streak    StandingsTeamRecordStreak `json:"streak"`
+	GamesBack string                    `json:"gamesBack"`
+}
+
+type StandingsTeamRecordTeam struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+type StandingsTeamRecordStreak struct {
+	StreakCode string `json:"streakCode"`
+}
 
 // Standing is an individual standing
 type Standing struct {
