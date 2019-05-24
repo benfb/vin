@@ -21,30 +21,6 @@ func main() {
 	}
 	app.Commands = []cli.Command{
 		{
-			Name:      "watch",
-			Aliases:   []string{"w"},
-			Usage:     "Notifies you when a blacked-out game is available",
-			ArgsUsage: "team phone server",
-			Flags: []cli.Flag{
-				&cli.Uint64Flag{
-					Name:  "interval, i",
-					Value: 20,
-					Usage: "how often to check if a game is over (in seconds)",
-				},
-			},
-			Action: func(c *cli.Context) error {
-				team := c.Args().Get(0)
-				phone := c.Args().Get(1)
-				server := c.Args().Get(2)
-				if team != "" && phone != "" && server != "" {
-					commands.WatchClient(c.Uint64("interval"), team, phone, server)
-				} else {
-					return cli.NewExitError("Error! You must supply a team name, phone number, and server", 1)
-				}
-				return nil
-			},
-		},
-		{
 			Name:      "standings",
 			Aliases:   []string{"s"},
 			Usage:     "Gets the current standings",
@@ -63,16 +39,6 @@ func main() {
 					division = "all"
 				}
 				commands.StandingsCmd(division)
-				return nil
-			},
-		},
-		{
-			Name:      "server",
-			Aliases:   []string{"serve"},
-			Usage:     "Runs a vin server",
-			ArgsUsage: "[address]",
-			Action: func(c *cli.Context) error {
-				commands.ServerCmd()
 				return nil
 			},
 		},

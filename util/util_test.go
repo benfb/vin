@@ -1,10 +1,6 @@
 package util
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 	"time"
 )
@@ -89,27 +85,5 @@ func TestFormatInning(t *testing.T) {
 	expectedFinal := "Final \u2714"
 	if resultFinal != expectedFinal {
 		t.Errorf("Got %v, expected %v.", resultFinal, expectedFinal)
-	}
-}
-
-func TestSendNotification(t *testing.T) {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "{\"success\":true}")
-	}))
-	defer ts.Close()
-
-	res, err := SendNotification(ts.URL, "5555555555", "test")
-	if err != nil {
-		log.Fatal(err)
-	}
-	result := string(res)
-	expected := "{\"success\":true}\n"
-	if result != expected {
-		t.Errorf("Got %v, expected %v.", result, expected)
-	}
-
-	_, reqErr := SendNotification("badurl", "5555555555", "badtext")
-	if reqErr == nil {
-		t.Errorf("Got nil, expected an error.")
 	}
 }

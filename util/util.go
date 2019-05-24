@@ -2,9 +2,6 @@ package util
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
 	"strings"
 	"time"
 )
@@ -29,7 +26,7 @@ func ContainsStringAny(s []string, e string) bool {
 	return false
 }
 
-// FindInStringSlice checks if any string in slice s contains string e
+// FindInStringSlice returns the location of the first string in slice s which contains string e
 func FindInStringSlice(s []string, e string) int {
 	if len(e) < 1 {
 		return -1
@@ -76,28 +73,4 @@ func FormatInning(inning string, isTop bool, status string) string {
 		return fmt.Sprintf("%s %s", inning, "\u25B4")
 	}
 	return fmt.Sprintf("%s %s", inning, "\u25BE")
-}
-
-// SendNotification sends a message to the phonenumber using the API at apiURL
-func SendNotification(apiURL, phoneNumber, message string) ([]byte, error) {
-	body := strings.NewReader("number=" + phoneNumber + "&message=" + message)
-	req, err := http.NewRequest("POST", apiURL, body)
-	if err != nil {
-		return []byte{}, err
-	}
-
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return []byte{}, err
-	}
-	defer resp.Body.Close()
-
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return respBody, nil
 }
