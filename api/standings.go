@@ -1,3 +1,14 @@
+package api
+
+import (
+	"os"
+	"sort"
+	"strconv"
+	"strings"
+
+	"github.com/olekukonko/tablewriter"
+)
+
 // FetchStandings gets the latest game data from the MLB API
 // and returns a list of games on the day specified by `t`
 func FetchStandings() *Standings {

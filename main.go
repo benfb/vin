@@ -12,7 +12,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "vin"
 	app.Usage = "the baseball command-line companion"
-	app.Version = "0.3.2"
+	app.Version = "0.4.0"
 	app.Authors = []cli.Author{
 		cli.Author{
 			Name:  "Ben Bailey",
