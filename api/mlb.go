@@ -1,90 +1,48 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/benfb/vin/util"
-	"github.com/daviddengcn/go-colortext"
+	ct "github.com/daviddengcn/go-colortext"
 	"github.com/olekukonko/tablewriter"
 )
-
-// FormatURL takes a time and returns the appropriate API URL to call
-func FormatURL(t time.Time) string {
-	year := t.Year()
-	month := util.PadDate(int(t.Month()))
-	day := util.PadDate(int(t.Day()))
-	return fmt.Sprint("https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=", month, "%2F", day, "%2F", year)
-}
 
 // FetchGames gets the latest game data from the MLB API
 // and returns a list of games on the day specified by `t`
 func FetchGames(t time.Time) []ScheduleGame {
-	url := FormatURL(t)
-
+	year := t.Year()
+	month := util.PadDate(int(t.Month()))
+	day := util.PadDate(int(t.Day()))
 	scheduleStruct := &Schedule{}
-	GetSchedule(url, scheduleStruct)
+
+	c := NewClient()
+	req, _ := c.NewRequest("GET", "schedule", map[string]string{
+		"sportId": "1",
+		"date":    fmt.Sprint(month, "/", day, "/", year),
+	})
+
+	c.Do(req, scheduleStruct)
 
 	return scheduleStruct.Dates[0].Games
 }
 
-// GetSchedule unmarshals an MLB JSON API response into an MLBRoot
-func GetSchedule(url string, target *Schedule) error {
-	resp, htmlErr := http.Get(url)
-
-	if htmlErr != nil {
-		return htmlErr
-	}
-
-	defer resp.Body.Close()
-
-	r, ioErr := ioutil.ReadAll(resp.Body)
-
-	if ioErr != nil {
-		return ioErr
-	}
-
-	if jsonErr := json.Unmarshal(r, &target); jsonErr != nil {
-		return jsonErr
-	}
-
-	return nil
-}
-
+// FetchLineScore gets a line score from the MLB API
 func FetchLineScore(id string) *LineScore {
 	ls := &LineScore{}
-	GetLineScore("https://statsapi.mlb.com/api/v1/game/"+id+"/linescore", ls)
+
+	c := NewClient()
+	req, _ := c.NewRequest("GET", "game/"+id+"/linescore", nil)
+
+	c.Do(req, ls)
 
 	return ls
-}
-
-func GetLineScore(url string, target *LineScore) error {
-	resp, htmlErr := http.Get(url)
-
-	if htmlErr != nil {
-		return htmlErr
-	}
-
-	defer resp.Body.Close()
-
-	r, ioErr := ioutil.ReadAll(resp.Body)
-
-	if ioErr != nil {
-		return ioErr
-	}
-
-	if jsonErr := json.Unmarshal(r, &target); jsonErr != nil {
-		return jsonErr
-	}
-
-	return nil
 }
 
 // IsOver determines whether or not a game is over
@@ -96,15 +54,16 @@ func (g ScheduleGame) IsOver() bool {
 	return false
 }
 
+// ParseTime returns a game's time localized to the current time zone
 func (g ScheduleGame) ParseTime() time.Time {
-	t, e := time.Parse("2006-01-02T15:04:05Z", g.Time)
-	if e != nil {
-		fmt.Println(e)
-	}
-	lt := t.Local()
-	if e != nil {
-		fmt.Println(e)
-	}
+	// t, e := time.Parse("2006-01-02T15:04:05Z", g.GameDate)
+	// if e != nil {
+	// 	fmt.Println(e)
+	// }
+	lt := g.GameDate.Local()
+	// if e != nil {
+	// 	fmt.Println(e)
+	// }
 	return lt
 }
 
@@ -115,7 +74,7 @@ func (g ScheduleGame) HasTeam(abbrv string) bool {
 		return false
 	}
 	abbrv = strings.ToLower(abbrv[:3])
-	return strings.Contains(strconv.Itoa(g.ID), abbrv)
+	return strings.Contains(strconv.Itoa(g.GamePk), abbrv)
 }
 
 // FindTeam determines if the team `team` is playing in `game`

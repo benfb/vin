@@ -26,7 +26,7 @@ func ResultsCmd(date, team, without string) error {
 	list := api.FetchGames(parsedTime)
 	for _, g := range list {
 		if !g.FindTeam(strings.Title(without)) && (g.FindTeam(strings.Title(team)) || team == "all") {
-			api.PrintBoxScoreTable(g, api.FetchLineScore(strconv.Itoa(g.ID)))
+			api.PrintBoxScoreTable(g, api.FetchLineScore(strconv.Itoa(g.GamePk)))
 		}
 	}
 

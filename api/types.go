@@ -1,133 +1,281 @@
 package api
 
-// Schedule is the root of an MLB JSON API response
-type Schedule struct {
-	Dates []ScheduleDate `json:"dates"`
+import "time"
+
+// IDLink is another generic struct
+type IDLink struct {
+	ID   int    `json:"id"`
+	Link string `json:"link"`
 }
 
-// ScheduleDate represents a data root from the MLB JSON API
-type ScheduleDate struct {
-	Date  string         `json:"date"`
-	Games []ScheduleGame `json:"games"`
-}
-
-// Game is an individual game
-type ScheduleGame struct {
-	ID     int                `json:"gamePk"`
-	Time   string             `json:"gameDate"`
-	Status ScheduleGameStatus `json:"status"`
-	Teams  ScheduleGameTeams  `json:"teams"`
-}
-
-type ScheduleGameStatus struct {
-	AbstractGameState string `json:"abstractGameState"`
-	CodedGameState    string `json:"codedGameState"`
-	DetailedState     string `json:"detailedState"`
-	StatusCode        string `json:"statusCode"`
-	AbstractGameCode  string `json:"abstractGameCode"`
-}
-
-type ScheduleGameTeams struct {
-	Away GameTeam `json:"away"`
-	Home GameTeam `json:"home"`
-}
-
-type GameTeam struct {
-	LeagueRecord GameTeamLeagueRecord
-	Score        int          `json:"score"`
-	Team         GameTeamTeam `json:"team"`
-	IsWinner     bool         `json:"isWinner"`
-	SplitSquad   bool         `json:"splitSquad"`
-	SeriesNumber int          `json:"seriesNumber"`
-}
-
-type GameTeamTeam struct {
+// IDNameLink is a generic struct that can represent several different types
+type IDNameLink struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 	Link string `json:"link"`
 }
 
-type GameTeamLeagueRecord struct {
+// Standings is a wrapper for StandingsRecords
+type Standings struct {
+	Records []StandingsRecord `json:"records"`
+}
+
+// StandingsStreak is a winning or losing streak. You usually want StreakCode, which looks like `W7`.
+type StandingsStreak struct {
+	StreakType   string `json:"streakType"`
+	StreakNumber int    `json:"streakNumber"`
+	StreakCode   string `json:"streakCode"`
+}
+
+// StandingsDivisionRecord is a team's record against a division
+type StandingsDivisionRecord struct {
+	Wins     int        `json:"wins"`
+	Losses   int        `json:"losses"`
+	Pct      string     `json:"pct"`
+	Division IDNameLink `json:"division"`
+}
+
+// StandingsGenericRecord is a generic representation of several more specialized types of records that come from the standings API
+type StandingsGenericRecord struct {
 	Wins   int    `json:"wins"`
 	Losses int    `json:"losses"`
+	Type   string `json:"type"`
 	Pct    string `json:"pct"`
 }
 
+// StandingsLeagueRecord is a team's record against a league
+type StandingsLeagueRecord struct {
+	Wins   int        `json:"wins"`
+	Losses int        `json:"losses"`
+	Pct    string     `json:"pct"`
+	League IDNameLink `json:"league"`
+}
+
+// StandingsDetailedRecords give more granular information about a team's record
+type StandingsDetailedRecords struct {
+	SplitRecords    []StandingsGenericRecord  `json:"splitRecords"`
+	DivisionRecords []StandingsDivisionRecord `json:"divisionRecords"`
+	OverallRecords  []StandingsGenericRecord  `json:"overallRecords"`
+	LeagueRecords   []StandingsLeagueRecord   `json:"leagueRecords"`
+	ExpectedRecords []StandingsGenericRecord  `json:"expectedRecords"`
+}
+
+// StandingsTeamRecord gives more detail about a team in the standings
+type StandingsTeamRecord struct {
+	Team                      IDNameLink               `json:"team"`
+	Season                    string                   `json:"season"`
+	Streak                    StandingsStreak          `json:"streak"`
+	ClinchIndicator           string                   `json:"clinchIndicator,omitempty"`
+	DivisionRank              string                   `json:"divisionRank"`
+	LeagueRank                string                   `json:"leagueRank"`
+	SportRank                 string                   `json:"sportRank"`
+	GamesPlayed               int                      `json:"gamesPlayed"`
+	GamesBack                 string                   `json:"gamesBack"`
+	WildCardGamesBack         string                   `json:"wildCardGamesBack"`
+	LeagueGamesBack           string                   `json:"leagueGamesBack"`
+	SpringLeagueGamesBack     string                   `json:"springLeagueGamesBack"`
+	SportGamesBack            string                   `json:"sportGamesBack"`
+	DivisionGamesBack         string                   `json:"divisionGamesBack"`
+	ConferenceGamesBack       string                   `json:"conferenceGamesBack"`
+	LeagueRecord              StandingsLeagueRecord    `json:"leagueRecord"`
+	LastUpdated               time.Time                `json:"lastUpdated"`
+	Records                   StandingsDetailedRecords `json:"records"`
+	RunsAllowed               int                      `json:"runsAllowed"`
+	RunsScored                int                      `json:"runsScored"`
+	DivisionChamp             bool                     `json:"divisionChamp"`
+	DivisionLeader            bool                     `json:"divisionLeader"`
+	HasWildcard               bool                     `json:"hasWildcard"`
+	Clinched                  bool                     `json:"clinched"`
+	EliminationNumber         string                   `json:"eliminationNumber"`
+	WildCardEliminationNumber string                   `json:"wildCardEliminationNumber"`
+	MagicNumber               string                   `json:"magicNumber,omitempty"`
+	Wins                      int                      `json:"wins"`
+	Losses                    int                      `json:"losses"`
+	RunDifferential           int                      `json:"runDifferential"`
+	WinningPercentage         string                   `json:"winningPercentage"`
+	WildCardRank              string                   `json:"wildCardRank,omitempty"`
+}
+
+// StandingsRecord is an important standings API struct
+type StandingsRecord struct {
+	StandingsType string                `json:"standingsType"`
+	League        IDLink                `json:"league"`
+	Division      IDNameLink            `json:"division"`
+	Sport         IDLink                `json:"sport"`
+	LastUpdated   time.Time             `json:"lastUpdated"`
+	TeamRecords   []StandingsTeamRecord `json:"teamRecords"`
+}
+
+// Schedule is a day's worth of games from the MLB API
+type Schedule struct {
+	TotalItems           int            `json:"totalItems"`
+	TotalEvents          int            `json:"totalEvents"`
+	TotalGames           int            `json:"totalGames"`
+	TotalGamesInProgress int            `json:"totalGamesInProgress"`
+	Dates                []ScheduleDate `json:"dates"`
+}
+
+// ScheduleGameStatus is a status of a game that is part of a Schedule
+type ScheduleGameStatus struct {
+	AbstractGameState string `json:"abstractGameState"`
+	CodedGameState    string `json:"codedGameState"`
+	DetailedState     string `json:"detailedState"`
+	StatusCode        string `json:"statusCode"`
+	Reason            string `json:"reason,omitempty"`
+	AbstractGameCode  string `json:"abstractGameCode"`
+}
+
+// ScheduleTeam is a team that's part of a Schedule
+type ScheduleTeam struct {
+	LeagueRecord StandingsGenericRecord `json:"leagueRecord"`
+	Score        int                    `json:"score"`
+	Team         IDNameLink             `json:"team"`
+	IsWinner     bool                   `json:"isWinner"`
+	SplitSquad   bool                   `json:"splitSquad"`
+	SeriesNumber int                    `json:"seriesNumber"`
+}
+
+// ScheduleTeams is a struct that maps a ScheduleTeam to both Away and Home
+type ScheduleTeams struct {
+	Away ScheduleTeam `json:"away"`
+	Home ScheduleTeam `json:"home"`
+}
+
+// ScheduleGame is a game that is part of a schedule
+type ScheduleGame struct {
+	GamePk   int                `json:"gamePk"`
+	Link     string             `json:"link"`
+	GameType string             `json:"gameType"`
+	Season   string             `json:"season"`
+	GameDate time.Time          `json:"gameDate"`
+	Status   ScheduleGameStatus `json:"status,omitempty"`
+	Teams    ScheduleTeams      `json:"teams"`
+	Venue    IDNameLink         `json:"venue"`
+	Content  struct {
+		Link string `json:"link"`
+	} `json:"content"`
+	IsTie                  bool      `json:"isTie,omitempty"`
+	GameNumber             int       `json:"gameNumber"`
+	PublicFacing           bool      `json:"publicFacing"`
+	DoubleHeader           string    `json:"doubleHeader"`
+	GamedayType            string    `json:"gamedayType"`
+	Tiebreaker             string    `json:"tiebreaker"`
+	CalendarEventID        string    `json:"calendarEventID"`
+	SeasonDisplay          string    `json:"seasonDisplay"`
+	DayNight               string    `json:"dayNight"`
+	ScheduledInnings       int       `json:"scheduledInnings"`
+	GamesInSeries          int       `json:"gamesInSeries"`
+	SeriesGameNumber       int       `json:"seriesGameNumber"`
+	SeriesDescription      string    `json:"seriesDescription"`
+	RecordSource           string    `json:"recordSource"`
+	IfNecessary            string    `json:"ifNecessary"`
+	IfNecessaryDescription string    `json:"ifNecessaryDescription"`
+	RescheduleDate         time.Time `json:"rescheduleDate,omitempty"`
+}
+
+// ScheduleDate is one day's worth of games
+type ScheduleDate struct {
+	Date                 string         `json:"date"`
+	TotalItems           int            `json:"totalItems"`
+	TotalEvents          int            `json:"totalEvents"`
+	TotalGames           int            `json:"totalGames"`
+	TotalGamesInProgress int            `json:"totalGamesInProgress"`
+	Games                []ScheduleGame `json:"games"`
+	Events               []interface{}  `json:"events"`
+}
+
+// LineScore represents an MLB API linescore
 type LineScore struct {
 	CurrentInning        int               `json:"currentInning"`
 	CurrentInningOrdinal string            `json:"currentInningOrdinal"`
+	InningState          string            `json:"inningState"`
 	InningHalf           string            `json:"inningHalf"`
 	IsTopInning          bool              `json:"isTopInning"`
 	ScheduledInnings     int               `json:"scheduledInnings"`
 	Innings              []LineScoreInning `json:"innings"`
 	Teams                LineScoreTeams    `json:"teams"`
+	Defense              LineScoreDefense  `json:"defense"`
+	Offense              LineScoreOffense  `json:"offense"`
+	Balls                int               `json:"balls"`
+	Strikes              int               `json:"strikes"`
+	Outs                 int               `json:"outs"`
 }
 
+// LineScoreInning represents an inning in a Linescore
 type LineScoreInning struct {
-	Num        int                 `json:"num"`
-	OrdinalNum string              `json:"ordinalNum"`
-	Away       LineScoreInningTeam `json:"away"`
-	Home       LineScoreInningTeam `json:"home"`
+	Num        int           `json:"num"`
+	OrdinalNum string        `json:"ordinalNum"`
+	Home       LineScoreTeam `json:"home,omitempty"`
+	Away       LineScoreTeam `json:"away,omitempty"`
 }
 
-type LineScoreInningTeam struct {
-	Runs int `json:"runs"`
-}
-
-type LineScoreTeams struct {
-	Away LineScoreTeam `json:"away"`
-	Home LineScoreTeam `json:"home"`
-}
-
+// LineScoreTeam is a team's representation in a LineScore
 type LineScoreTeam struct {
-	Runs   int `json:"runs"`
-	Hits   int `json:"hits"`
-	Errors int `json:"errors"`
+	Runs       int `json:"runs"`
+	Hits       int `json:"hits"`
+	Errors     int `json:"errors"`
+	LeftOnBase int `json:"leftOnBase"`
 }
 
-// StandingsResponse is a json root response from the API
-type StandingsResponse struct {
-	Date         string    `json:"standings_date"`
-	StandingList Standings `json:"standing"`
+// LineScoreTeams maps a LineScoreTeam to Home and another to Away
+type LineScoreTeams struct {
+	Home LineScoreTeam `json:"home"`
+	Away LineScoreTeam `json:"away"`
 }
 
-// Standings is a slice of multiple Standings
-type Standings []Standing
-
-type StandingsRecords struct {
-	TeamRecords []StandingsTeamRecords `json:"teamRecords"`
+// LineScorePlayer has a full name
+type LineScorePlayer struct {
+	ID       int    `json:"id"`
+	FullName string `json:"fullName"`
+	Link     string `json:"link"`
 }
 
-type StandingsTeamRecords []StandingsTeamRecord
-
-type StandingsTeamRecord struct {
-	Team      StandingsTeamRecordTeam   `json:"team"`
-	Streak    StandingsTeamRecordStreak `json:"streak"`
-	GamesBack string                    `json:"gamesBack"`
+// LineScoreDefense gives information about players on defense
+type LineScoreDefense struct {
+	Pitcher   LineScorePlayer `json:"pitcher"`
+	Catcher   LineScorePlayer `json:"catcher"`
+	First     LineScorePlayer `json:"first"`
+	Second    LineScorePlayer `json:"second"`
+	Third     LineScorePlayer `json:"third"`
+	Shortstop LineScorePlayer `json:"shortstop"`
+	Left      LineScorePlayer `json:"left"`
+	Center    LineScorePlayer `json:"center"`
+	Right     LineScorePlayer `json:"right"`
+	Team      IDNameLink      `json:"team"`
 }
 
-type StandingsTeamRecordTeam struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+// LineScoreOffense gives information about players on offense
+type LineScoreOffense struct {
+	Batter  LineScorePlayer `json:"batter"`
+	OnDeck  LineScorePlayer `json:"onDeck"`
+	InHole  LineScorePlayer `json:"inHole"`
+	Second  LineScorePlayer `json:"second"`
+	Pitcher LineScorePlayer `json:"pitcher"`
+	Team    IDNameLink      `json:"team"`
 }
 
-type StandingsTeamRecordStreak struct {
-	StreakCode string `json:"streakCode"`
-}
-
-// Standing is an individual standing
-type Standing struct {
-	ID            string  `json:"team_id"`
-	Rank          int     `json:"rank"`
-	OrdinalRank   string  `json:"ordinal_rank"`
-	Won           int     `json:"won"`
-	Lost          int     `json:"lost"`
-	FirstName     string  `json:"first_name"`
-	LastName      string  `json:"last_name"`
-	League        string  `json:"conference"`
-	Division      string  `json:"division"`
-	GamesBack     float64 `json:"games_back"`
-	GamesPlayed   int     `json:"games_played"`
-	WinPercentage string  `json:"win_percentage"`
-	Streak        string  `json:"streak"`
+// RosterResponse is a response from /v1/teams/<teamid>/roster
+type RosterResponse struct {
+	Roster []struct {
+		Person struct {
+			ID       int    `json:"id"`
+			FullName string `json:"fullName"`
+			Link     string `json:"link"`
+		} `json:"person"`
+		JerseyNumber string `json:"jerseyNumber"`
+		Position     struct {
+			Code         string `json:"code"`
+			Name         string `json:"name"`
+			Type         string `json:"type"`
+			Abbreviation string `json:"abbreviation"`
+		} `json:"position"`
+		Status struct {
+			Code        string `json:"code"`
+			Description string `json:"description"`
+		} `json:"status"`
+		ParentTeamID int `json:"parentTeamId"`
+	} `json:"roster"`
+	Link       string `json:"link"`
+	TeamID     int    `json:"teamId"`
+	RosterType string `json:"rosterType"`
 }

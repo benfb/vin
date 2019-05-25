@@ -67,6 +67,7 @@ var Teams = []string{
 	"Nationals",
 }
 
+// TeamsWithLocs is a slice of full MLB team names with their location included
 var TeamsWithLocs = []string{
 	"Arizona Diamondbacks",
 	"Atlanta Braves",
@@ -97,4 +98,18 @@ var TeamsWithLocs = []string{
 	"Texas Rangers",
 	"Toronto Blue Jays",
 	"Washington Nationals",
+}
+
+var leagueIDMap = map[string]int{
+	"AL": 103,
+	"NL": 104,
+}
+
+var divisionIDMap = map[string]int{
+	"ALW": 200,
+	"ALE": 201,
+	"ALC": 202,
+	"NLW": 203,
+	"NLE": 204,
+	"NLC": 205,
 }

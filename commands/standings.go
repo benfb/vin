@@ -2,26 +2,20 @@ package commands
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/benfb/vin/api"
-	"github.com/daviddengcn/go-colortext"
+	ct "github.com/daviddengcn/go-colortext"
 )
 
 // StandingsCmd gets standings from the xmlstats API
 func StandingsCmd(division string) {
 	standings := api.FetchStandings()
-	sort.Sort(standings)
 
 	if division == "agg" {
 		standings.PrintMasterStandingsTable()
 	} else {
 		division = strings.ToUpper(division)[:3]
-		leagueDivisionMap := map[string][]string{
-			"AL": []string{"E", "C", "W"},
-			"NL": []string{"E", "C", "W"},
-		}
 
 		shortDivisionMap := map[string]string{
 			"ALE": "American League East",
@@ -32,14 +26,12 @@ func StandingsCmd(division string) {
 			"NLW": "National League West",
 		}
 
-		for league, divisionSlice := range leagueDivisionMap {
-			for _, standingsDivision := range divisionSlice {
-				if league+standingsDivision == division || division == "ALL" {
-					ct.Foreground(ct.Cyan, true)
-					fmt.Println("\n" + shortDivisionMap[league+standingsDivision])
-					ct.ResetColor()
-					standings.PrintStandingsTable(league, standingsDivision)
-				}
+		for key := range shortDivisionMap {
+			if key == division || division == "ALL" {
+				ct.Foreground(ct.Cyan, true)
+				fmt.Println("\n" + shortDivisionMap[key])
+				ct.ResetColor()
+				standings.PrintStandingsTable(key)
 			}
 		}
 	}

@@ -39,17 +39,6 @@ func FindInStringSlice(s []string, e string) int {
 	return -1
 }
 
-// Spinner prints out a cool spinner to prove that we're doing something
-func Spinner() {
-	defer fmt.Println()
-	for {
-		for _, r := range `-\|/` {
-			fmt.Printf("\r%c", r)
-			time.Sleep(50 * time.Millisecond)
-		}
-	}
-}
-
 // LocateTime locates a time in a place
 func LocateTime(t time.Time, l string) (time.Time, error) {
 	loc, err := time.LoadLocation(l)
