@@ -12,7 +12,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "vin"
 	app.Usage = "the baseball command-line companion"
-	app.Version = "0.4.0"
+	app.Version = "0.4.1"
 	app.Authors = []cli.Author{
 		cli.Author{
 			Name:  "Ben Bailey",
@@ -65,6 +65,26 @@ func main() {
 					day = "today"
 				}
 				return commands.ResultsCmd(day, c.String("team"), c.String("except"))
+			},
+		},
+		{
+			Name:      "box",
+			Aliases:   []string{"b"},
+			Usage:     "Get a boxscore for a particular game",
+			ArgsUsage: "[date]",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:  "team, t",
+					Value: "all",
+					Usage: "name of team to get box score for",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				day := c.Args().Get(0)
+				if day == "" {
+					day = "today"
+				}
+				return commands.BoxScoreCmd(day, c.String("team"))
 			},
 		},
 	}

@@ -49,21 +49,12 @@ func (g ScheduleGame) IsOver() bool {
 	if g.Status.AbstractGameState == "Final" {
 		return true
 	}
-
 	return false
 }
 
 // ParseTime returns a game's time localized to the current time zone
 func (g ScheduleGame) ParseTime() time.Time {
-	// t, e := time.Parse("2006-01-02T15:04:05Z", g.GameDate)
-	// if e != nil {
-	// 	fmt.Println(e)
-	// }
-	lt := g.GameDate.Local()
-	// if e != nil {
-	// 	fmt.Println(e)
-	// }
-	return lt
+	return g.GameDate.Local()
 }
 
 // HasTeam determines if the team `abbrv` is playing in `game`

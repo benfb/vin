@@ -15,6 +15,19 @@ type IDNameLink struct {
 	Link string `json:"link"`
 }
 
+// IDFullNameLink is another generic struct
+type IDFullNameLink struct {
+	ID       int    `json:"id"`
+	FullName string `json:"fullName"`
+	Link     string `json:"link"`
+}
+
+// LabelValue is another generic struct
+type LabelValue struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+}
+
 // Standings is a wrapper for StandingsRecords
 type Standings struct {
 	Records []StandingsRecord `json:"records"`
@@ -223,46 +236,35 @@ type LineScoreTeams struct {
 	Away LineScoreTeam `json:"away"`
 }
 
-// LineScorePlayer has a full name
-type LineScorePlayer struct {
-	ID       int    `json:"id"`
-	FullName string `json:"fullName"`
-	Link     string `json:"link"`
-}
-
 // LineScoreDefense gives information about players on defense
 type LineScoreDefense struct {
-	Pitcher   LineScorePlayer `json:"pitcher"`
-	Catcher   LineScorePlayer `json:"catcher"`
-	First     LineScorePlayer `json:"first"`
-	Second    LineScorePlayer `json:"second"`
-	Third     LineScorePlayer `json:"third"`
-	Shortstop LineScorePlayer `json:"shortstop"`
-	Left      LineScorePlayer `json:"left"`
-	Center    LineScorePlayer `json:"center"`
-	Right     LineScorePlayer `json:"right"`
-	Team      IDNameLink      `json:"team"`
+	Pitcher   IDFullNameLink `json:"pitcher"`
+	Catcher   IDFullNameLink `json:"catcher"`
+	First     IDFullNameLink `json:"first"`
+	Second    IDFullNameLink `json:"second"`
+	Third     IDFullNameLink `json:"third"`
+	Shortstop IDFullNameLink `json:"shortstop"`
+	Left      IDFullNameLink `json:"left"`
+	Center    IDFullNameLink `json:"center"`
+	Right     IDFullNameLink `json:"right"`
+	Team      IDNameLink     `json:"team"`
 }
 
 // LineScoreOffense gives information about players on offense
 type LineScoreOffense struct {
-	Batter  LineScorePlayer `json:"batter"`
-	OnDeck  LineScorePlayer `json:"onDeck"`
-	InHole  LineScorePlayer `json:"inHole"`
-	Second  LineScorePlayer `json:"second"`
-	Pitcher LineScorePlayer `json:"pitcher"`
-	Team    IDNameLink      `json:"team"`
+	Batter  IDFullNameLink `json:"batter"`
+	OnDeck  IDFullNameLink `json:"onDeck"`
+	InHole  IDFullNameLink `json:"inHole"`
+	Second  IDFullNameLink `json:"second"`
+	Pitcher IDFullNameLink `json:"pitcher"`
+	Team    IDNameLink     `json:"team"`
 }
 
 // RosterResponse is a response from /v1/teams/<teamid>/roster
 type RosterResponse struct {
 	Roster []struct {
-		Person struct {
-			ID       int    `json:"id"`
-			FullName string `json:"fullName"`
-			Link     string `json:"link"`
-		} `json:"person"`
-		JerseyNumber string `json:"jerseyNumber"`
+		Person       IDFullNameLink `json:"person"`
+		JerseyNumber string         `json:"jerseyNumber"`
 		Position     struct {
 			Code         string `json:"code"`
 			Name         string `json:"name"`
