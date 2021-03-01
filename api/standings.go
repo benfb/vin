@@ -80,9 +80,7 @@ func (std *Standings) PrintMasterStandingsTable() {
 func (std *Standings) FlattenToTeamRecordsSlice() []StandingsTeamRecord {
 	var trs []StandingsTeamRecord
 	for _, r := range std.Records {
-		for _, tr := range r.TeamRecords {
-			trs = append(trs, tr)
-		}
+		trs = append(trs, r.TeamRecords...)
 	}
 	return trs
 }

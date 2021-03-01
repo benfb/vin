@@ -46,10 +46,7 @@ func FetchLineScore(id string) *LineScore {
 
 // IsOver determines whether or not a game is over
 func (g ScheduleGame) IsOver() bool {
-	if g.Status.AbstractGameState == "Final" {
-		return true
-	}
-	return false
+	return g.Status.AbstractGameState == "Final"
 }
 
 // ParseTime returns a game's time localized to the current time zone
@@ -85,13 +82,13 @@ func PrintBoxScoreTable(sg ScheduleGame, ls *LineScore) {
 	ct.ResetColor()
 	if sg.Status.AbstractGameState != "Preview" {
 		data := [][]string{
-			[]string{
+			{
 				sg.Teams.Away.Team.Name,
 				strconv.Itoa(ls.Teams.Away.Runs),
 				strconv.Itoa(ls.Teams.Away.Hits),
 				strconv.Itoa(ls.Teams.Away.Errors),
 			},
-			[]string{
+			{
 				sg.Teams.Home.Team.Name,
 				strconv.Itoa(ls.Teams.Home.Runs),
 				strconv.Itoa(ls.Teams.Home.Hits),
