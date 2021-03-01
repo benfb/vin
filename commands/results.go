@@ -7,7 +7,7 @@ import (
 
 	"github.com/benfb/vin/api"
 	"github.com/benfb/vin/util"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // ResultsCmd is the command run by `vin results`

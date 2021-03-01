@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/benfb/vin/api"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // BoxScoreCmd is the command run by `vin box`

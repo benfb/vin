@@ -5,7 +5,7 @@ import (
 
 	"github.com/benfb/vin/commands"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -13,13 +13,13 @@ func main() {
 	app.Name = "vin"
 	app.Usage = "the baseball command-line companion"
 	app.Version = "0.4.1"
-	app.Authors = []cli.Author{
-		cli.Author{
+	app.Authors = []*cli.Author{
+		{
 			Name:  "Ben Bailey",
 			Email: "bennettbailey@gmail.com",
 		},
 	}
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:      "standings",
 			Aliases:   []string{"s"},
