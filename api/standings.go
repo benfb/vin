@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -12,10 +13,11 @@ import (
 // FetchStandings gets the latest game data from the MLB API
 // and returns a list of games on the day specified by `t`
 func FetchStandings() *Standings {
+	currentYear := time.Now().Year()
 	c := NewClient()
 	req, _ := c.NewRequest("GET", "standings", map[string]string{
 		"leagueId": "103,104",
-		"season":   "2019",
+		"season":   strconv.Itoa(currentYear),
 	})
 
 	standingsStruct := &Standings{}
@@ -50,30 +52,30 @@ func RestrictDivision(records []StandingsRecord, division string) []StandingsRec
 // division to Stdout
 func (std *Standings) PrintStandingsTable(division string) {
 	narrowed := RestrictDivision(std.Records, division)
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost", "Back", "Str"})
+	table := tablewriter.NewTable(os.Stdout)
+	table.Header([]string{"#", "Team", "Pct", "Won", "Lost", "Back", "Str"})
 	for i, s := range narrowed[0].TeamRecords {
 		gamesBack := s.GamesBack
 		if gamesBack == "0" {
 			gamesBack = "-"
 		}
-		table.Append([]string{strconv.Itoa(i + 1), s.Team.Name, s.WinningPercentage, strconv.Itoa(s.Wins), strconv.Itoa(s.Losses), gamesBack, s.Streak.StreakCode})
+		_ = table.Append([]string{strconv.Itoa(i + 1), s.Team.Name, s.WinningPercentage, strconv.Itoa(s.Wins), strconv.Itoa(s.Losses), gamesBack, s.Streak.StreakCode})
 	}
-	table.Render()
+	_ = table.Render()
 }
 
 // PrintMasterStandingsTable prints a game-wide standings table to Stdout
 func (std *Standings) PrintMasterStandingsTable() {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "Team", "Pct", "Won", "Lost", "Str"})
+	table := tablewriter.NewTable(os.Stdout)
+	table.Header([]string{"#", "Team", "Pct", "Won", "Lost", "Str"})
 	trs := std.FlattenToTeamRecordsSlice()
 	sort.SliceStable(trs, func(i, j int) bool {
 		return trs[i].WinningPercentage > trs[j].WinningPercentage
 	})
 	for i, s := range trs {
-		table.Append([]string{strconv.Itoa(i + 1), s.Team.Name, s.WinningPercentage, strconv.Itoa(s.Wins), strconv.Itoa(s.Losses), s.Streak.StreakCode})
+		_ = table.Append([]string{strconv.Itoa(i + 1), s.Team.Name, s.WinningPercentage, strconv.Itoa(s.Wins), strconv.Itoa(s.Losses), s.Streak.StreakCode})
 	}
-	table.Render()
+	_ = table.Render()
 }
 
 // FlattenToTeamRecordsSlice takes a Standings pointer and returns a flattened slice of TeamRecords

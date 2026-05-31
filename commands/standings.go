@@ -1,11 +1,10 @@
 package commands
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/benfb/vin/api"
-	ct "github.com/daviddengcn/go-colortext"
+	"github.com/fatih/color"
 )
 
 // StandingsCmd gets standings from the xmlstats API
@@ -28,9 +27,7 @@ func StandingsCmd(division string) {
 
 		for key := range shortDivisionMap {
 			if key == division || division == "ALL" {
-				ct.Foreground(ct.Cyan, true)
-				fmt.Println("\n" + shortDivisionMap[key])
-				ct.ResetColor()
+				color.New(color.FgHiCyan).Println("\n" + shortDivisionMap[key])
 				standings.PrintStandingsTable(key)
 			}
 		}

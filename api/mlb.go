@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/benfb/vin/util"
-	ct "github.com/daviddengcn/go-colortext"
+	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -76,10 +76,8 @@ func (g ScheduleGame) FindTeam(team string) bool {
 
 // PrintBoxScoreTable prints a box score to Stdout
 func PrintBoxScoreTable(sg ScheduleGame, ls *LineScore) {
-	ct.Foreground(ct.Cyan, true)
 	gameTime := sg.ParseTime()
-	fmt.Printf("%s (%d - %d) @ %s (%d - %d) [%v]\n", sg.Teams.Away.Team.Name, sg.Teams.Away.LeagueRecord.Wins, sg.Teams.Away.LeagueRecord.Losses, sg.Teams.Home.Team.Name, sg.Teams.Home.LeagueRecord.Wins, sg.Teams.Home.LeagueRecord.Losses, gameTime.Format("3:04PM"))
-	ct.ResetColor()
+	color.New(color.FgHiCyan).Printf("%s (%d - %d) @ %s (%d - %d) [%v]\n", sg.Teams.Away.Team.Name, sg.Teams.Away.LeagueRecord.Wins, sg.Teams.Away.LeagueRecord.Losses, sg.Teams.Home.Team.Name, sg.Teams.Home.LeagueRecord.Wins, sg.Teams.Home.LeagueRecord.Losses, gameTime.Format("3:04PM"))
 	if sg.Status.AbstractGameState != "Preview" {
 		data := [][]string{
 			{
@@ -95,10 +93,10 @@ func PrintBoxScoreTable(sg ScheduleGame, ls *LineScore) {
 				strconv.Itoa(ls.Teams.Home.Errors),
 			},
 		}
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Team", "Runs", "Hits", "Errs"})
-		table.AppendBulk(data)
-		table.Render()
+		table := tablewriter.NewTable(os.Stdout)
+		table.Header([]string{"Team", "Runs", "Hits", "Errs"})
+		_ = table.Bulk(data)
+		_ = table.Render()
 		fmt.Println("Inning: " + util.FormatInning(ls.CurrentInningOrdinal, ls.IsTopInning, sg.Status.AbstractGameState))
 		fmt.Println()
 	}

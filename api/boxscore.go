@@ -371,23 +371,21 @@ func (bst *BoxScoreTeam) PitchersTableData() [][]string {
 // PrintBattingTable formats a team's battinng boxscore data for table printing
 func (bst *BoxScoreTeam) PrintBattingTable() {
 	data := bst.BattersTableData()
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{bst.Team.LocationName + " Batters", "AB", "R", "H", "RBI", "BB", "SO", "LOB", "AVG", "OPS"})
-	// table.SetBorder(false)
-	table.AppendBulk(data)
-	table.SetFooter([]string{"TOTALS", strconv.Itoa(bst.TeamStats.Batting.AtBats), strconv.Itoa(bst.TeamStats.Batting.Runs), strconv.Itoa(bst.TeamStats.Batting.Hits), strconv.Itoa(bst.TeamStats.Batting.Rbi), strconv.Itoa(bst.TeamStats.Batting.BaseOnBalls), strconv.Itoa(bst.TeamStats.Batting.StrikeOuts), strconv.Itoa(bst.TeamStats.Batting.LeftOnBase), "", ""})
-	table.Render()
+	table := tablewriter.NewTable(os.Stdout)
+	table.Header([]string{bst.Team.LocationName + " Batters", "AB", "R", "H", "RBI", "BB", "SO", "LOB", "AVG", "OPS"})
+	_ = table.Bulk(data)
+	table.Footer([]string{"TOTALS", strconv.Itoa(bst.TeamStats.Batting.AtBats), strconv.Itoa(bst.TeamStats.Batting.Runs), strconv.Itoa(bst.TeamStats.Batting.Hits), strconv.Itoa(bst.TeamStats.Batting.Rbi), strconv.Itoa(bst.TeamStats.Batting.BaseOnBalls), strconv.Itoa(bst.TeamStats.Batting.StrikeOuts), strconv.Itoa(bst.TeamStats.Batting.LeftOnBase), "", ""})
+	_ = table.Render()
 }
 
 // PrintPitchingTable formats a team's battinng boxscore data for table printing
 func (bst *BoxScoreTeam) PrintPitchingTable() {
 	data := bst.PitchersTableData()
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{bst.Team.LocationName + " Pitchers", "IP", "H", "R", "ER", "BB", "SO", "HR", "ERA"})
-	// table.SetBorder(false)
-	table.AppendBulk(data)
-	table.SetFooter([]string{"TOTALS", bst.TeamStats.Pitching.InningsPitched, strconv.Itoa(bst.TeamStats.Pitching.Hits), strconv.Itoa(bst.TeamStats.Pitching.Runs), strconv.Itoa(bst.TeamStats.Pitching.EarnedRuns), strconv.Itoa(bst.TeamStats.Pitching.BaseOnBalls), strconv.Itoa(bst.TeamStats.Pitching.StrikeOuts), strconv.Itoa(bst.TeamStats.Pitching.HomeRuns), ""})
-	table.Render()
+	table := tablewriter.NewTable(os.Stdout)
+	table.Header([]string{bst.Team.LocationName + " Pitchers", "IP", "H", "R", "ER", "BB", "SO", "HR", "ERA"})
+	_ = table.Bulk(data)
+	table.Footer([]string{"TOTALS", bst.TeamStats.Pitching.InningsPitched, strconv.Itoa(bst.TeamStats.Pitching.Hits), strconv.Itoa(bst.TeamStats.Pitching.Runs), strconv.Itoa(bst.TeamStats.Pitching.EarnedRuns), strconv.Itoa(bst.TeamStats.Pitching.BaseOnBalls), strconv.Itoa(bst.TeamStats.Pitching.StrikeOuts), strconv.Itoa(bst.TeamStats.Pitching.HomeRuns), ""})
+	_ = table.Render()
 }
 
 // Print prints a boxscore
